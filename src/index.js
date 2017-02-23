@@ -6,6 +6,8 @@ const {
   },
 } = require('parse5');
 
+import { compose, sequence } from './composition.js';
+
 /**
  * We only want to deal with models in the the htmlparser2 format -
  * wrapping the parse and serializer functions allows us to
@@ -327,44 +329,6 @@ const reduce = (function () {
     return recurse(fn, i, node);
   };
 }());
-
-/**
- * Compose a set of functions from right to left, the first argument
- * will be the last function to be called in the composed function.
- *
- * @param {...Function}
- *
- * @returns {Function}
- */
-function compose(...fns) {
-  return function (res) {
-    let len = fns.length;
-    while (len) {
-      res = fns[len - 1](res); // eslint-disable-line no-param-reassign
-      len--;
-    }
-    return res;
-  };
-}
-
-/**
- * Compose a set of functions from left to right, the last argument
- * will be the first function to be called in the composed function.
- * Effectively the opposite of `compose`.
- *
- * @param {...Function}
- *
- * @returns {Function}
- */
-function sequence(...fns) {
-  return function (res) {
-    const len = fns.length;
-    for (let i = 0; i < len; i++) {
-      res = fns[i](res); // eslint-disable-line no-param-reassign
-    }
-    return res;
-  };
-}
 
 module.exports = {
   parse,
