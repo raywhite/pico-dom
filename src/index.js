@@ -19,7 +19,7 @@ const OPTIONS = { treeAdapter: adapter };
  *
  * @returns {Object} document model
  */
-export function parse(doc, markup) {
+export function parse(doc, markup) { // eslint-disable-line consistent-return
   // A markup string was passed as the only argument - default.
   if (typeof doc === 'string') {
     return parseFragment(doc, OPTIONS);

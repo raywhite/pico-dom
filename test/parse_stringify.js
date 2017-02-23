@@ -1,6 +1,6 @@
 import expect from 'expect';
-import { parse, stringify } from '../src/index.js';
-import { trim, inspect } from './test_utilities.js';
+import { parse, stringify } from '../src/index';
+import { trim, inspect } from './test_utilities';
 
 /**
  * TODO: Make assertions about the root node and the location

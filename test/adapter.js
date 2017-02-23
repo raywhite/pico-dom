@@ -7,8 +7,8 @@
  */
 
 import expect from 'expect';
-import { parse, stringify, adapter } from '../src/index.js';
-import { inspect, trim, XHTML_NAMESPACE } from './test_utilities.js';
+import { parse, stringify, adapter } from '../src/index';
+import { inspect, trim, XHTML_NAMESPACE } from './test_utilities';
 
 describe('adapter', function () {
   it('should expose all of the methods that wrapped adapter does', function () {

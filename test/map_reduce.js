@@ -1,6 +1,6 @@
 import expect from 'expect';
-import { parse, stringify, map, reduce, adapter } from '../src/index.js';
-import { count, inspect, noop, XHTML_NAMESPACE } from './test_utilities.js';
+import { stringify, map, reduce, adapter } from '../src/index';
+import { count, inspect, noop, XHTML_NAMESPACE } from './test_utilities';
 
 describe('dom transformation methods', function () {
   const LIST_ITEM = '<li';
