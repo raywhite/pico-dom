@@ -1,7 +1,7 @@
 /** @jsx adapter.createNode */
 
 import expect from 'expect';
-import { trim, noop, count, inspect } from './utilities.js';
+import { trim, noop, count, inspect } from './test_utilities.js';
 
 import {
   parse,
@@ -17,48 +17,6 @@ const XHTML_NAMESPACE = 'http://www.w3.org/1999/xhtml';
 const LIST_ITEM = '<li';
 
 describe('markups exported functions', function () {
-  describe('parse and stringify', function () {
-    const markup = trim(`
-      <div>
-        <a href="http://somedomain.haus">anchor</a>
-        <p>
-          another text node
-        </p>
-        <div>
-          <div>
-            berfore line break
-            <br>
-            after line break
-          </div>
-        </div>
-      </div>
-    `);
-
-    it('should be functions', function () {
-      expect(parse).toBeA('function');
-      expect(stringify).toBeA('function');
-    });
-
-    it('parse and stringify should have parity', function () {
-      const parsed = parse(markup);
-      const stringifyd = stringify(parsed);
-      expect(stringifyd).toBe(markup);
-    });
-
-    it('parse should produce a dom tree in htmlparser2 format', function () {
-      const parsed = parse(markup);
-      const str = inspect(parsed);
-
-      expect(parsed.type).toBe('root');
-      expect(str).toMatch(/type: 'root'/);
-
-      /**
-       * TODO: Make assertions about the root node and the location
-       * of text in the document etc.
-       */
-    });
-  });
-
   describe('adapter', function () {
     it('should expose all of the methods that wrapped adapter does', function () {
       // htmlparser2 `treeAdaptor` methods exposed by parse5 - no need to test in depth.
