@@ -5,7 +5,7 @@ import { inspect as _inspect } from 'util';
 
 import {
   parse,
-  serialize,
+  stringify,
   map,
   reduce,
   adapter,
@@ -54,7 +54,7 @@ describe('markups exported functions', function () {
    */
   function noop() {}
 
-  describe('parse and serialize', function () {
+  describe('parse and stringify', function () {
     const markup = trim(`
       <div>
         <a href="http://somedomain.haus">anchor</a>
@@ -73,13 +73,13 @@ describe('markups exported functions', function () {
 
     it('should be functions', function () {
       expect(parse).toBeA('function');
-      expect(serialize).toBeA('function');
+      expect(stringify).toBeA('function');
     });
 
-    it('parse and serialize should have parity', function () {
+    it('parse and stringify should have parity', function () {
       const parsed = parse(markup);
-      const serialized = serialize(parsed);
-      expect(serialized).toBe(markup);
+      const stringifyd = stringify(parsed);
+      expect(stringifyd).toBe(markup);
     });
 
     it('parse should produce a dom tree in htmlparser2 format', function () {
@@ -219,7 +219,7 @@ describe('markups exported functions', function () {
             adapter.appendChild(dom, clone);
 
             // Make sure that the attributes are also cloned, detach for parity.
-            expect(serialize(dom)).toBe('<div id="x"></div>');
+            expect(stringify(dom)).toBe('<div id="x"></div>');
             adapter.detachNode(clone);
 
             // They are not the same object, but equal in all other regards.
@@ -333,7 +333,7 @@ describe('markups exported functions', function () {
           adapter.appendChild(dom, node);
 
           // Serialized version matches.
-          expect(serialize(dom)).toEqual(markup);
+          expect(stringify(dom)).toEqual(markup);
 
           const parsed = parse(markup);
 
@@ -390,7 +390,7 @@ describe('markups exported functions', function () {
           adapter.appendChild(dom, node);
 
           // Serialized version matches.
-          expect(serialize(dom)).toEqual(markup);
+          expect(stringify(dom)).toEqual(markup);
 
           const parsed = parse(markup);
 
@@ -455,7 +455,7 @@ describe('markups exported functions', function () {
           adapter.appendChild(dom, node);
 
           // Serialized version matches.
-          expect(serialize(dom)).toEqual(markup);
+          expect(stringify(dom)).toEqual(markup);
 
           const parsed = parse(markup);
 
@@ -518,7 +518,7 @@ describe('markups exported functions', function () {
           adapter.appendChild(dom, node);
 
           // Serialized version matches.
-          expect(serialize(dom)).toEqual(markup);
+          expect(stringify(dom)).toEqual(markup);
 
           const parsed = parse(markup);
 
@@ -580,7 +580,7 @@ describe('markups exported functions', function () {
           adapter.appendChild(dom, node);
 
           // Serialized version matches.
-          expect(serialize(dom)).toEqual(markup);
+          expect(stringify(dom)).toEqual(markup);
 
           const parsed = parse(markup);
 
@@ -614,7 +614,7 @@ describe('markups exported functions', function () {
           });
 
           // Ensure the correct structure and order.
-          expect(serialize(dom)).toEqual(trim(`
+          expect(stringify(dom)).toEqual(trim(`
             <!--comment content-->
             <div>
             </div>
@@ -631,7 +631,7 @@ describe('markups exported functions', function () {
           // Append the child.
           adapter.appendChild(dom, textNode);
 
-          expect(serialize(dom)).toEqual(trim(`
+          expect(stringify(dom)).toEqual(trim(`
             <!--comment content-->
             <div>
             </div>
@@ -660,7 +660,7 @@ describe('markups exported functions', function () {
           const textNode = adapter.createTextNode(', and then some');
 
           // Ensure the original structure.
-          expect(serialize(dom)).toEqual('<!--reference node-->');
+          expect(stringify(dom)).toEqual('<!--reference node-->');
           /**
            * Insert all of the nodes in the order in which they were declared,
            * should eventuate in this;
@@ -671,7 +671,7 @@ describe('markups exported functions', function () {
             adapter.insertBefore(dom, node, referenceNode);
           });
 
-          expect(serialize(dom)).toEqual(trim(`
+          expect(stringify(dom)).toEqual(trim(`
             <!--comment content-->
             <div>
             </div>
@@ -692,7 +692,7 @@ describe('markups exported functions', function () {
           adapter.insertBefore(dom, newNode, textNode);
 
           // Text nodes should merge.
-          expect(serialize(dom)).toBe(trim(`
+          expect(stringify(dom)).toBe(trim(`
             <!--comment content-->
             <div></div>
             some text, and then some
@@ -844,7 +844,7 @@ describe('markups exported functions', function () {
             // Ensure that there wasn't any mutation in the model, but noop worked.
             expect(dom).toNotBe(mapped);
             expect(inspect(dom)).toBe(inspect(mapped));
-            expect(serialize(dom)).toBe(serialize(mapped));
+            expect(stringify(dom)).toBe(stringify(mapped));
           }());
 
           /**
@@ -889,7 +889,7 @@ describe('markups exported functions', function () {
             // Ensure that there wasn't any mutation in the model, but noop worked.
             expect(dom).toNotBe(mapped);
             expect(inspect(dom)).toBe(inspect(mapped));
-            expect(serialize(dom)).toBe(serialize(mapped));
+            expect(stringify(dom)).toBe(stringify(mapped));
           }());
         });
 
@@ -927,8 +927,8 @@ describe('markups exported functions', function () {
             expect(dom).toNotBe(mapped);
             expect(inspect(dom)).toMatch(re);
             expect(inspect(mapped)).toNotMatch(re);
-            expect(serialize(dom)).toNotBe(serialize(mapped));
-            expect(serialize(dom).length).toBeGreaterThan(serialize(mapped).length);
+            expect(stringify(dom)).toNotBe(stringify(mapped));
+            expect(stringify(dom).length).toBeGreaterThan(stringify(mapped).length);
           }());
 
           /**
@@ -959,8 +959,8 @@ describe('markups exported functions', function () {
             // Ensure that the new dom contains no text items.
             expect(dom).toNotBe(mapped);
             expect(inspect(dom).length).toBeGreaterThan(inspect(mapped).length);
-            expect(count(serialize(dom), LIST_ITEM)).toBe(3);
-            expect(count(serialize(mapped), LIST_ITEM)).toBe(0);
+            expect(count(stringify(dom), LIST_ITEM)).toBe(3);
+            expect(count(stringify(mapped), LIST_ITEM)).toBe(0);
           }());
         });
 
@@ -1000,8 +1000,8 @@ describe('markups exported functions', function () {
 
           // Ensure that the new dom contains three text nodes.
           expect(dom).toNotBe(mapped);
-          expect(count(serialize(dom), INJECTED)).toBe(0);
-          expect(count(serialize(mapped), INJECTED)).toBe(3);
+          expect(count(stringify(dom), INJECTED)).toBe(0);
+          expect(count(stringify(mapped), INJECTED)).toBe(3);
 
           const re = /name: 'article'/;
           expect(inspect(dom)).toNotMatch(re);
@@ -1040,8 +1040,8 @@ describe('markups exported functions', function () {
 
           const mapped = mapper(dom);
 
-          expect(count(serialize(dom), LIST_ITEM)).toBe(3);
-          expect(count(serialize(mapped), LIST_ITEM)).toBe(6);
+          expect(count(stringify(dom), LIST_ITEM)).toBe(3);
+          expect(count(stringify(mapped), LIST_ITEM)).toBe(6);
 
           const ids = [];
           /**

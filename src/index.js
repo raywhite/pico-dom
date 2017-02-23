@@ -1,7 +1,7 @@
 import {
   parseFragment,
   parse as _parse,
-  serialize as _serialize,
+  serialize,
 } from 'parse5';
 
 import { compose, sequence } from './composition.js';
@@ -40,12 +40,10 @@ function parse(doc, markup) {
 /**
  * @param {String} a document model
  *
- * TODO: Rename this to stringify.
- *
  * @returns {Object} some markup
  */
-function serialize(model) {
-  return _serialize(model, OPTIONS);
+function stringify(model) {
+  return serialize(model, OPTIONS);
 }
 
 const map = (function () {
@@ -166,7 +164,7 @@ const reduce = (function () {
 
 module.exports = {
   parse,
-  serialize,
+  stringify,
   map,
   reduce,
   adapter,
