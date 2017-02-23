@@ -1,7 +1,8 @@
-const {
-  parseFragment: _parse,
-  serialize: _serialize,
-} = require('parse5');
+import {
+  parseFragment,
+  parse as _parse,
+  serialize as _serialize,
+} from 'parse5';
 
 import { compose, sequence } from './composition.js';
 import { adapter } from './manipulation.js';
@@ -16,12 +17,24 @@ const OPTIONS = { treeAdapter: adapter };
 /**
  * @param {String} some markup
  *
- * TODO: Needs to support parsing as a document.
+ * TODO: Needs tests for support of parsing as a document.
  *
  * @returns {Object} document model
  */
-function parse(str) {
-  return _parse(str, OPTIONS);
+function parse(doc, markup) {
+  // A markup string was passed as the only argument - default.
+  if (typeof doc === 'string') {
+    return parseFragment(doc, OPTIONS);
+  }
+
+  // A doc options was passed.
+  if (typeof doc === 'boolean') {
+    // Parse as a document.
+    if (doc) return _parse(markup, OPTIONS);
+
+    // Parse as a document fragment.
+    return parseFragment(markup, OPTIONS);
+  }
 }
 
 /**
@@ -31,8 +44,8 @@ function parse(str) {
  *
  * @returns {Object} some markup
  */
-function serialize(tree) {
-  return _serialize(tree, OPTIONS);
+function serialize(model) {
+  return _serialize(model, OPTIONS);
 }
 
 const map = (function () {
