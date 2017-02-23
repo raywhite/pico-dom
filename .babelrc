@@ -1,0 +1,9 @@
+{
+  "presets": ["latest", "stage-2"],
+  "plugins": [
+    "transform-class-properties",
+    "transform-object-assign",
+    "transform-es2015-block-scoping",
+    "transform-react-jsx"
+  ]
+}
