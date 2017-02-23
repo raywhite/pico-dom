@@ -1,4 +1,10 @@
 import { inspect as _inspect } from 'util';
+/**
+ * We need to create elements throughout the tests with some
+ * namespace URI, so we can use use the XHTML namespace (HTML5)
+ * for this.
+ */
+export const XHTML_NAMESPACE = 'http://www.w3.org/1999/xhtml';
 
 /**
  * Returns a functions that appends to a string.

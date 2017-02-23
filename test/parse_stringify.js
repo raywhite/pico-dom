@@ -1,5 +1,4 @@
 import expect from 'expect';
-
 import { parse, stringify } from '../src/index.js';
 import { trim, inspect } from './test_utilities.js';
 
