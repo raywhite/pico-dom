@@ -162,7 +162,7 @@ const reduce = (function () {
   };
 }());
 
-module.exports = {
+export {
   parse,
   stringify,
   map,

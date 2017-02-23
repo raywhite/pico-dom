@@ -1,7 +1,7 @@
 /** @jsx adapter.createNode */
 
 import expect from 'expect';
-import { inspect as _inspect } from 'util';
+import { trim, noop, count, inspect } from './utilities.js';
 
 import {
   parse,
@@ -17,43 +17,6 @@ const XHTML_NAMESPACE = 'http://www.w3.org/1999/xhtml';
 const LIST_ITEM = '<li';
 
 describe('markups exported functions', function () {
-  /**
-   * @param {String} markup
-   *
-   * @returns {String} trimmed markup
-   */
-  function trim(str) {
-    return str.replace(/\n\s*/g, '');
-  }
-
-  /**
-   * Stringify a JS object, infinitely deep.
-   *
-   * @param {Object}
-   *
-   * @returns {String}
-   */
-  function inspect(obj) {
-    return _inspect(obj, { depth: null });
-  }
-
-  /**
-   * Count occurences of a substring.
-   *
-   * @param {String}
-   *
-   * @returns {Number} the occurences
-   */
-  function count(str, substr) {
-    const re = new RegExp(substr, 'g');
-    return (str.match(re) || []).length;
-  }
-
-  /**
-   * @returns {Void}
-   */
-  function noop() {}
-
   describe('parse and stringify', function () {
     const markup = trim(`
       <div>
@@ -1223,48 +1186,6 @@ describe('markups exported functions', function () {
             'p',
           ]);
         });
-      });
-    });
-  });
-
-  describe('composition utilities', function () {
-    /**
-     * @param {Number} some digit(s)
-     *
-     * @returns {Function}
-     */
-    function append(d) {
-      /**
-       * @param {String}
-       *
-       * @returns {String}
-       */
-      return function (r) {
-        return r + String(d);
-      };
-    }
-
-    describe('compose', function () {
-      it('is a higher order function', function () {
-        const composed = compose(noop);
-        expect(composed).toBeA('function');
-      });
-
-      it('should compose functions right to left', function () {
-        const composed = compose(append(4), append(3), append(2));
-        expect(composed(1)).toBe('1234');
-      });
-    });
-
-    describe('sequence', function () {
-      it('is a higher order function', function () {
-        const sequenced = sequence(noop);
-        expect(sequenced).toBeA('function');
-      });
-
-      it('should compose functions left to right', function () {
-        const sequenced = sequence(append(2), append(3), append(4));
-        expect(sequenced(1)).toBe('1234');
       });
     });
   });
