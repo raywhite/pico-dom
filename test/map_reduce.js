@@ -1,20 +1,9 @@
 import expect from 'expect';
-import { trim, noop, count, inspect } from './test_utilities.js';
+import { parse, stringify, map, reduce, adapter } from '../src/index.js';
+import { count, inspect, noop, XHTML_NAMESPACE } from './test_utilities.js';
 
-import {
-  parse,
-  stringify,
-  map,
-  reduce,
-  adapter,
-  compose,
-  sequence,
-} from '../src/index.js';
-
-const XHTML_NAMESPACE = 'http://www.w3.org/1999/xhtml';
-const LIST_ITEM = '<li';
-
-describe('dom manipulation methods', function () {
+describe('dom transformation methods', function () {
+  const LIST_ITEM = '<li';
   const COMMENT = 'comment node';
   const TEXT_ONE = 'first text node';
   const TEXT_TWO = 'second text node';

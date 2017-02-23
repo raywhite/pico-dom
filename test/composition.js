@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { compose, sequence } from '../src/composition.js';
+import { compose, sequence } from '../src/index.js';
 import { append, noop } from './test_utilities.js';
 
 describe('composition methods', function () {
