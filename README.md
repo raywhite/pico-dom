@@ -4,3 +4,99 @@
 
 > Create, transform and serialize lightweight HTML abstract syntax trees in a functional and composable style. You know... for the web!
 
+## About
+
+[pico-dom](https://github.com/raywhite/pico-dom) is a tool for parsing, transformation and serialization of [HTML](https://www.w3.org/TR/html5/). It is built on top of The premise of the module is simple; any markup can be represented as a simple data structure (a Abstract Syntax Tree - not unlike the [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) implemented in browsers) - Just like a hash, array, or any other collection, we can transform that tree using functional utilities like [map](#map) and [reduce](#reduce), and compose sets of those utilities into streams that perform complex tasks.
+
+[pico-dom](https://github.com/raywhite/pico-dom) has several use cases:
+ - markup sanitization
+ - markup transformation
+ - markup templating
+ - web scraping
+
+## API
+
+### **parse([document, ] m)**
+
+### **stringify(t)**
+
+### **adapter**
+
+  - **adoptAttributes()**
+
+  - **appendChild()**
+
+  - **cloneNode()**
+
+  - **createCommentNode()**
+
+  - **createDocument()**
+
+  - **createDocumentFragment()**
+
+  - **createElement()**
+
+  - **createNode(tagName, attributes, childNodes)**
+
+    This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
+
+  - **createTextNode()**
+
+  - **detachNode()**
+
+  - **getAttrList()**
+
+  - **getChildNodes()**
+
+  - **getCommentNodeContent()**
+
+  - **getDocumentMode()**
+
+  - **getDocumentTypeNodeName()**
+
+  - **getDocumentTypeNodePublicId()**
+
+  - **getDocumentTypeNodeSystemId()**
+
+  - **getFirstChild()**
+
+  - **getNamespaceURI()**
+
+  - **getParentNode()**
+
+  - **getTagName()**
+
+  - **getTemplateContent()**
+
+  - **getTextNodeContent()**
+
+  - **insertBefore()**
+
+  - **insertText()**
+
+  - **insertTextBefore()**
+
+  - **isCommentNode()**
+
+  - **isDocumentTypeNode()**
+
+  - **isElementNode()**
+
+  - **isRootNode()**
+
+  - **isTextNode()**
+
+  - **setDocumentMode()**
+
+  - **setDocumentType()**
+
+  - **setTemplateContent()**
+
+### **map(fn, node)**
+
+### **reduce(fn, i, node)**
+
+### **compose(...fns)**
+
+### **sequence(...fns)**
+
