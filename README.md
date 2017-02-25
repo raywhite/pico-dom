@@ -22,75 +22,75 @@
 
 ### **adapter**
 
-  - **adoptAttributes()**
+  **adoptAttributes(recipient, attributes)**
 
-  - **appendChild()**
+  **appendChild(parentNode, newNode)**
 
-  - **cloneNode()**
+  **cloneNode(node)Node**
 
-  - **createCommentNode()**
+  **createCommentNode(data)**
 
-  - **createDocument()**
+  **createDocument()**
 
-  - **createDocumentFragment()**
+  **createDocumentFragment()**
 
-  - **createElement()**
+  **createElement(tagName, namespaceURI, attributes)**
 
-  - **createNode(tagName, attributes, childNodes)**
+  **createNode(tagName, attrs, childNodes)**
 
-    This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
+This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
 
-  - **createTextNode()**
+  **createTextNode(data)**
 
-  - **detachNode()**
+  **#detachNode(node)**
 
-  - **getAttrList()**
+  **#getAttrList(element)**
 
-  - **getChildNodes()**
+  **getChildNodes(node)**
 
-  - **getCommentNodeContent()**
+  **getCommentNodeContent(commentNode)**
 
-  - **getDocumentMode()**
+  **getDocumentMode(document)**
 
-  - **getDocumentTypeNodeName()**
+  **getDocumentTypeNodeName(node)**
 
-  - **getDocumentTypeNodePublicId()**
+  **getDocumentTypeNodePublicId(node)**
 
-  - **getDocumentTypeNodeSystemId()**
+  **getDocumentTypeNodeSystemId(node)**
 
-  - **getFirstChild()**
+  **getFirstChild(node)**
 
-  - **getNamespaceURI()**
+  **getNamespaceURI(element)**
 
-  - **getParentNode()**
+  **getParentNode(node)**
 
-  - **getTagName()**
+  **getTagName(element)**
 
-  - **getTemplateContent()**
+  **getTemplateContent(templateElement)**
 
-  - **getTextNodeContent()**
+  **getTextNodeContent(textNode)**
 
-  - **insertBefore()**
+  **insertBefore(parentNode, newNode, referenceNode)**
 
-  - **insertText()**
+  **insertText(parentNode, text)**
 
-  - **insertTextBefore()**
+  **insertTextBefore(parentNode, text, referenceNode)**
 
-  - **isCommentNode()**
+  **isCommentNode(node)**
 
-  - **isDocumentTypeNode()**
+  **isDocumentTypeNode(node)**
 
-  - **isElementNode()**
+  **isElementNode(node)**
 
-  - **isRootNode()**
+  **isRootNode(node)**
 
-  - **isTextNode()**
+  **isTextNode(node)**
 
-  - **setDocumentMode()**
+  **setDocumentMode(document, mode)**
 
-  - **setDocumentType()**
+  **setDocumentType(document, name, publicId, systemId)**
 
-  - **setTemplateContent()**
+  **setTemplateContent(templateElement, contentElement)**
 
 ### **map(fn, node)**
 
