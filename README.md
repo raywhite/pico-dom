@@ -16,89 +16,115 @@
 
 ## API
 
-### **parse([*document*, ] *markup*)**
+### **parse([*doc*, ] *markup*)**
+
+ - **doc** (`boolean`) - whether or not to parse as a document (default: `false`)
+
+ - **markup** (`string`) - the markup to be parsed into an AST.
+
+This is a wrapper around the `parse` and `parseFragment` methods from [parse5](https://github.com/inikulin/parse5). It will return an AST in the in the [htmlparser2](https://github.com/fb55/htmlparser2) format. 
+
+**Note:** Where `doc` is not provided, the markup will be parsed as a document fragment, if you'd like for the markup to be parsed as a valid document (the way a browser would interpret it) then you should set `doc` to true.
 
 ### **stringify(*tree*)**
 
+ - **tree** (`object`) - the AST to be serialized.
+
+This wraps the `serialize` method from [parse5](https://github.com/inikulin/parse5) - it'll serialize any AST in the [htmlparser2](https://github.com/fb55/htmlparser2) format.
+
 ### **adapter**
 
-  **adoptAttributes(recipient, attributes)**
+  **adoptAttributes(*recipient*, *attributes*)**
 
-  **appendChild(parentNode, newNode)**
+  **appendChild(*parentNode*, *newNode*)**
 
-  **cloneNode(node)Node**
+  **cloneNode(*node*)**
 
-  **createCommentNode(data)**
+  **createCommentNode(*data*)**
 
   **createDocument()**
 
   **createDocumentFragment()**
 
-  **createElement(tagName, namespaceURI, attributes)**
+  **createElement(*tagName*, *namespaceURI*, *attributes*)**
 
-  **createNode(tagName, attrs, childNodes)**
+  **createNode(*tagName*, *attrs*, *childNodes*)**
 
 This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
 
 **Note:** this function supports the use of two extra `tagName`s; Passing `'fragment'` as will create a document fragment root node and passing `'document'` will create a document root node - this means that you won't have to manually append nodes to a document or fragment node in order to produce a serializable abstract syntax tree.
 
-  **createTextNode(data)**
+  **createTextNode(*data*)**
 
-  **#detachNode(node)**
+  **detachNode(*node*)**
 
-  **#getAttrList(element)**
+  **getAttrList(*element*)**
 
-  **getChildNodes(node)**
+  **getChildNodes(*node*)**
 
-  **getCommentNodeContent(commentNode)**
+  **getCommentNodeContent(*commentNode*)**
 
-  **getDocumentMode(document)**
+  **getDocumentMode(*document*)**
 
-  **getDocumentTypeNodeName(node)**
+  **getDocumentTypeNodeName(*node*)**
 
-  **getDocumentTypeNodePublicId(node)**
+  **getDocumentTypeNodePublicId(*node*)**
 
-  **getDocumentTypeNodeSystemId(node)**
+  **getDocumentTypeNodeSystemId(*node*)**
 
-  **getFirstChild(node)**
+  **getFirstChild(*node*)**
 
-  **getNamespaceURI(element)**
+  **getNamespaceURI(*element*)**
 
-  **getParentNode(node)**
+  **getParentNode(*node*)**
 
-  **getTagName(element)**
+  **getTagName(*element*)**
 
-  **getTemplateContent(templateElement)**
+  **getTemplateContent(*templateElement*)**
 
-  **getTextNodeContent(textNode)**
+  **getTextNodeContent(*textNode*)**
 
-  **insertBefore(parentNode, newNode, referenceNode)**
+  **insertBefore(*parentNode*, *newNode*, *referenceNode*)**
 
-  **insertText(parentNode, text)**
+  **insertText(*parentNode*, *text*)**
 
-  **insertTextBefore(parentNode, text, referenceNode)**
+  **insertTextBefore(*parentNode*, *text*, *referenceNode*)**
 
-  **isCommentNode(node)**
+  **isCommentNode(*node*)**
 
-  **isDocumentTypeNode(node)**
+  **isDocumentTypeNode(*node*)**
 
-  **isElementNode(node)**
+  **isElementNode(*node*)**
 
-  **isRootNode(node)**
+  **isRootNode(*node*)**
 
-  **isTextNode(node)**
+  **isTextNode(*node*)**
 
-  **setDocumentMode(document, mode)**
+  **setDocumentMode(*document*, *mode*)**
 
-  **setDocumentType(document, name, publicId, systemId)**
+  **setDocumentType(*document*, *name*, *publicId*, *systemId*)**
 
-  **setTemplateContent(templateElement, contentElement)**
+  **setTemplateContent(*templateElement*, *contentElement*)**
 
 ### **map(*fn*, *node*)**
 
+ - **fn** (`function`) - the callback that will recurse the AST.
+
+ - **node** (`object`) - the root node of the AST to map.
+
 ### **reduce(*fn*, *i*, *node*)**
+
+ - **fn** (`function`) - the callback that will recurse the AST.
+
+ - **i** (`number|string|function`) - the initial value for the reduction.
+
+ - **node** (`object`) - **node** (`object`) - the root node of the AST to reduce.
 
 ### **compose(...*fns*)**
 
+ - **fns** (`...function`) - the functions to be composed.
+
 ### **sequence(...*fns*)**
+
+ - **fns** (`...function`) - the functions to be composed.
 
