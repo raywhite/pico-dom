@@ -6,7 +6,7 @@
 
 ## About
 
-[pico-dom](https://github.com/raywhite/pico-dom) is a tool for parsing, transformation and serialization of [HTML](https://www.w3.org/TR/html5/). It is built on top of The premise of the module is simple; any markup can be represented as a simple data structure (a Abstract Syntax Tree - not unlike the [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) implemented in browsers) - Just like a hash, array, or any other collection, we can transform that tree using functional utilities like [map](#map) and [reduce](#reduce), and compose sets of those utilities into streams that perform complex tasks.
+[pico-dom](https://github.com/raywhite/pico-dom) is a tool for parsing, transformation and serialization of [HTML](https://www.w3.org/TR/html5/). It is built on top of the excellent and forgiving [parse5](https://github.com/inikulin/parse5) module, and is based on a simple premise; any markup can be represented as a simple data structure (a Abstract Syntax Tree - not unlike the [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) implemented in browsers) - Just like a hash, array, or any other collection, we can transform that tree using functional utilities like [map](#map) and [reduce](#reduce), and [compose](#compose) sets of those utilities into streams that perform complex transformations.
 
 [pico-dom](https://github.com/raywhite/pico-dom) has several use cases:
  - markup sanitization
