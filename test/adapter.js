@@ -512,14 +512,14 @@ describe('adapter', function () {
          *
          * @returns {Object} node
          */
-        function TextBlock(props) {
+        function TextBlock(props) { // eslint-disable-line no-unused-vars
           const { text, items } = props;
           return (
             <fragment>
               <p>{text}</p>
               <ul>
                 {items.map(function (item) {
-                  return <li>{item}</li>
+                  return <li>{item}</li>;
                 })}
               </ul>
             </fragment>
@@ -527,7 +527,7 @@ describe('adapter', function () {
         }
 
         // Some props to pass into our `TextBlock` component.
-        const text ='this is some text content';
+        const text = 'this is some text content';
         const items = [
           'item one',
           'item two',

@@ -16,9 +16,9 @@
 
 ## API
 
-### **parse([document, ] m)**
+### **parse([*document*, ] *markup*)**
 
-### **stringify(t)**
+### **stringify(*tree*)**
 
 ### **adapter**
 
@@ -39,6 +39,8 @@
   **createNode(tagName, attrs, childNodes)**
 
 This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
+
+**Note:** this function supports the use of two extra `tagName`s; Passing `'fragment'` as will create a document fragment root node and passing `'document'` will create a document root node - this means that you won't have to manually append nodes to a document or fragment node in order to produce a serializable abstract syntax tree.
 
   **createTextNode(data)**
 
@@ -92,11 +94,11 @@ This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible functi
 
   **setTemplateContent(templateElement, contentElement)**
 
-### **map(fn, node)**
+### **map(*fn*, *node*)**
 
-### **reduce(fn, i, node)**
+### **reduce(*fn*, *i*, *node*)**
 
-### **compose(...fns)**
+### **compose(...*fns*)**
 
-### **sequence(...fns)**
+### **sequence(...*fns*)**
 
