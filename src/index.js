@@ -200,8 +200,10 @@ adapter.createNode = (function () {
       return fn(props);
     }
 
-    // Coerce the attributes into the correct structure.
+    let node = null;
     const _attributes = [];
+
+    // Coerce the attributes into the correct structure.
     if (attributes !== null) {
       const keys = Object.keys(attributes);
       const len = keys.length;
@@ -212,8 +214,21 @@ adapter.createNode = (function () {
       }
     }
 
-    // Create the node using the provided attributers.
-    const node = adapter.createElement(tagName, XHTML_NAMESPACE, _attributes);
+    switch (tagName) {
+      // NOTE: Special case, create a document fragment.
+      case 'fragment':
+        node = adapter.createDocumentFragment();
+        break;
+
+      // NOTE: Special case, create a document.
+      case 'document':
+        node = adapter.createDocument();
+        break;
+
+      default:
+        node = adapter.createElement(tagName, XHTML_NAMESPACE, _attributes);
+        break;
+    }
 
     // Append all children to the node. Then return the node.
     append(node, childNodes);

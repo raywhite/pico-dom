@@ -501,6 +501,58 @@ describe('adapter', function () {
         // The internal node structure is the same.
         expect(inspect(dom)).toEqual(inspect(parsed));
       });
+
+      it('should handle the special fragment `tagName`', function () {
+        /**
+         * A component to make a little text block where
+         * the root node that is provided is actually a
+         * document fragment.
+         *
+         * @param {Object} props
+         *
+         * @returns {Object} node
+         */
+        function TextBlock(props) { // eslint-disable-line no-unused-vars
+          const { text, items } = props;
+          return (
+            <fragment>
+              <p>{text}</p>
+              <ul>
+                {items.map(function (item) {
+                  return <li>{item}</li>;
+                })}
+              </ul>
+            </fragment>
+          );
+        }
+
+        // Some props to pass into our `TextBlock` component.
+        const text = 'this is some text content';
+        const items = [
+          'item one',
+          'item two',
+          'item three',
+        ];
+
+        const node = <TextBlock text={text} items={items} />;
+
+        // Ensure that we have created a fragment.
+        expect(node.type).toBe('root');
+
+        const markup = trim(`
+          <p>this is some text content</p>
+          <ul>
+            <li>item one</li>
+            <li>item two</li>
+            <li>item three</li>
+          </ul>
+        `);
+
+        // Ensure that the two structures match and seriazlize identically.
+        const parsed = parse(markup);
+        expect(inspect(node)).toBe(inspect(parsed));
+        expect(stringify(node)).toBe(markup);
+      });
     });
   });
 
