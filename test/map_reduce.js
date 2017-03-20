@@ -1,3 +1,4 @@
+/** @jsx adapter.createNode */
 import expect from 'expect';
 import { parse, stringify, map, reduce, adapter } from '../src/index';
 import { count, inspect, noop, XHTML_NAMESPACE } from './test_utilities';
@@ -190,27 +191,55 @@ describe('dom transformation methods', function () {
         }());
       });
 
-      // NOTE: Special case - return a single text child in array appears to be broken.
+      /**
+       * NOTE: Special case - return a single text child in array
+       * appears to be broken.
+       *
+       * SEE: `https://github.com/raywhite/office-sites/issues/889`
+       */
       it('should handle a single text node child', function () {
         const markup = '<a src="site.io">text</a>';
 
         const model = parse(markup);
-        // console.log(inspect(model));
+        (function () {
+          function fn(node) {
+            if (adapter.isElementNode(node)) {
+              const children = adapter.getChildNodes(node);
+              return children;
+            }
 
-        function fn(node) {
-          if (adapter.isElementNode(node)) {
-            const children = adapter.getChildNodes(node);
+            return node;
+          }
+
+          const mapper = map.bind(null, fn);
+          const mapped = mapper(model);
+          const child = adapter.getChildNodes(mapped)[0];
+          expect(adapter.isTextNode(child)).toBe(true);
+          expect(adapter.getTextNodeContent(child)).toBe('text');
+          expect(stringify(mapped)).toBe('text');
+        }());
+
+        (function () {
+          function ChildReplacer(props) { // eslint-disable-line no-unused-vars
+            const { children } = props;
             return children;
           }
 
-          return node;
-        }
+          function fn(node) {
+            if (adapter.isElementNode(node)) {
+              return <ChildReplacer>{adapter.getChildNodes(node)}</ChildReplacer>;
+            }
 
-        const mapper = map.bind(null, fn);
-        const mapped = mapper(model);
-        const child = adapter.getChildNodes(mapped)[0];
-        expect(adapter.isTextNode(child)).toBe(true);
-        expect(adapter.getTextNodeContent(child)).toBe('text');
+            return node;
+          }
+
+          const mapper = map.bind(null, fn);
+          const mapped = mapper(model);
+          const child = adapter.getChildNodes(mapped)[0];
+          expect(adapter.isTextNode(child)).toBe(true);
+          expect(adapter.getTextNodeContent(child)).toBe('text');
+          expect(stringify(mapped)).toBe('text');
+        }());
       });
 
       it('should correctly remove nodes where null is returned', function () {

@@ -253,6 +253,7 @@ export const map = (function () {
     const children = adapter.getChildNodes(parentNode);
     if (!Array.isArray(newNode)) {
       if (newNode === null) return;
+
       children.length ? // eslint-disable-line no-unused-expressions
         adapter.insertBefore(parentNode, newNode, children[0]) :
         adapter.appendChild(parentNode, newNode);
@@ -263,7 +264,16 @@ export const map = (function () {
     let len = newNode.length;
     while (len) {
       const _newNode = newNode[len - 1];
+
+      // The node is null.
       if (_newNode === null) {
+        len--;
+        continue; // eslint-disable-line no-continue
+      }
+
+      // The node is a nested array - flatten it.
+      if (Array.isArray(_newNode)) {
+        prepend(parentNode, _newNode);
         len--;
         continue; // eslint-disable-line no-continue
       }
