@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { stringify, map, reduce, adapter } from '../src/index';
+import { parse, stringify, map, reduce, adapter } from '../src/index';
 import { count, inspect, noop, XHTML_NAMESPACE } from './test_utilities';
 
 describe('dom transformation methods', function () {
@@ -188,6 +188,29 @@ describe('dom transformation methods', function () {
           expect(inspect(dom)).toBe(inspect(mapped));
           expect(stringify(dom)).toBe(stringify(mapped));
         }());
+      });
+
+      // NOTE: Special case - return a single text child in array appears to be broken.
+      it('should handle a single text node child', function () {
+        const markup = '<a src="site.io">text</a>';
+
+        const model = parse(markup);
+        // console.log(inspect(model));
+
+        function fn(node) {
+          if (adapter.isElementNode(node)) {
+            const children = adapter.getChildNodes(node);
+            return children;
+          }
+
+          return node;
+        }
+
+        const mapper = map.bind(null, fn);
+        const mapped = mapper(model);
+        const child = adapter.getChildNodes(mapped)[0];
+        expect(adapter.isTextNode(child)).toBe(true);
+        expect(adapter.getTextNodeContent(child)).toBe('text');
       });
 
       it('should correctly remove nodes where null is returned', function () {
