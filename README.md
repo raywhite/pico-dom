@@ -128,3 +128,7 @@ This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible functi
 
  - **fns** (`...function`) - the functions to be composed.
 
+### License
+
+&bull; **MIT** &copy; Ray White, 2017 &bull;
+
