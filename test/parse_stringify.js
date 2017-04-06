@@ -44,4 +44,17 @@ describe('parse and stringify', function () {
     expect(parsed.type).toBe('root');
     expect(str).toMatch(/type: 'root'/);
   });
+
+  // NOTE: Special test case... bug dealing with undefined being returned.
+  it('should nont fail when passed a nonsensical value', function () {
+    const parsestringify = function (doc, markup) { // eslint-disable-line no-shadow
+      return stringify(parse(doc, markup));
+    };
+
+    expect(parsestringify(null)).toBe('');
+    expect(parsestringify(undefined)).toBe('');
+    expect(parsestringify(false, undefined)).toBe('');
+    expect(parsestringify(true, undefined)).toBe('<html><head></head><body></body></html>');
+    expect(parsestringify(false, null)).toBe('');
+  });
 });
