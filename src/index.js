@@ -19,20 +19,22 @@ const OPTIONS = { treeAdapter: adapter };
  *
  * @returns {Object} document model
  */
-export function parse(doc, markup) { // eslint-disable-line consistent-return
+export function parse(doc = false, markup = '') { // eslint-disable-line consistent-return
   // A markup string was passed as the only argument - default.
   if (typeof doc === 'string') {
     return parseFragment(doc, OPTIONS);
   }
 
   // A doc options was passed.
-  if (typeof doc === 'boolean') {
+  if (typeof doc === 'boolean' && typeof markup === 'string') {
     // Parse as a document.
     if (doc) return _parse(markup, OPTIONS);
 
     // Parse as a document fragment.
     return parseFragment(markup, OPTIONS);
   }
+
+  return doc ? adapter.createDocument() : adapter.createDocumentFragment();
 }
 
 /**
