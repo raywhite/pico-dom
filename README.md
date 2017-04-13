@@ -34,77 +34,101 @@ This wraps the `serialize` method from [parse5](https://github.com/inikulin/pars
 
 ### **adapter**
 
-  **adoptAttributes(*recipient*, *attributes*)**
+**adoptAttributes(*recipient*, *attributes*)**
 
-  **appendChild(*parentNode*, *newNode*)**
+- **recipient** (`object`) - the element to copy attributes into.
+- **attributes** (`array`) - the attributes to copy.
 
-  **cloneNode(*node*)**
+**appendChild(*parentNode*, *newNode*)**
 
-  **createCommentNode(*data*)**
+- **parentNode** (`object`) - the parent node.
+- **newNode** (`object`) - the new node to append.
 
-  **createDocument()**
+**cloneNode(*node*)**
 
-  **createDocumentFragment()**
+- node (`object`) - the node to clone.
 
-  **createElement(*tagName*, *namespaceURI*, *attributes*)**
+**createCommentNode(*data*)**
 
-  **createNode(*tagName*, *attrs*, *childNodes*)**
+- data (`string`) - the text content of the comment node.
+
+**createDocument()**
+
+Creates a spec compliant document that new nodes can be insterted into / appended to.
+
+**createDocumentFragment()**
+
+Creates a document fragment that new nodes can be insterted into / appended to.
+
+**createElement(*tagName*, *namespaceURI*, *attributes*)**
+
+- tagName (`string`) - the elements tag name.
+- namespaceURI (`string`) - the elements namespace.
+- attributes (`array`) - the elements attributes.
+
+**createNode(*tagName*, *attrs*, *childNodes*)**
+
+- tagName (`string|function`) - the tag name, or function to be called with `attrs` as `props`.
+- attrs (`object`) - the attribute (`key`:`value`) pairs or `props`.
+- childNodes (`...object|array|string`) - the child nodes of this node.
 
 This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
 
 **Note:** this function supports the use of two extra `tagName`s; Passing `'fragment'` as will create a document fragment root node and passing `'document'` will create a document root node - this means that you won't have to manually append nodes to a document or fragment node in order to produce a serializable abstract syntax tree.
 
-  **createTextNode(*data*)**
+**createTextNode(*data*)**
 
-  **detachNode(*node*)**
+ - data (`string`) - the text nodes content.
 
-  **getAttrList(*element*)**
+**detachNode(*node*)**
 
-  **getChildNodes(*node*)**
+**getAttrList(*element*)**
 
-  **getCommentNodeContent(*commentNode*)**
+**getChildNodes(*node*)**
 
-  **getDocumentMode(*document*)**
+**getCommentNodeContent(*commentNode*)**
 
-  **getDocumentTypeNodeName(*node*)**
+**getDocumentMode(*document*)**
 
-  **getDocumentTypeNodePublicId(*node*)**
+**getDocumentTypeNodeName(*node*)**
 
-  **getDocumentTypeNodeSystemId(*node*)**
+**getDocumentTypeNodePublicId(*node*)**
 
-  **getFirstChild(*node*)**
+**getDocumentTypeNodeSystemId(*node*)**
 
-  **getNamespaceURI(*element*)**
+**getFirstChild(*node*)**
 
-  **getParentNode(*node*)**
+**getNamespaceURI(*element*)**
 
-  **getTagName(*element*)**
+**getParentNode(*node*)**
 
-  **getTemplateContent(*templateElement*)**
+**getTagName(*element*)**
 
-  **getTextNodeContent(*textNode*)**
+**getTemplateContent(*templateElement*)**
 
-  **insertBefore(*parentNode*, *newNode*, *referenceNode*)**
+**getTextNodeContent(*textNode*)**
 
-  **insertText(*parentNode*, *text*)**
+**insertBefore(*parentNode*, *newNode*, *referenceNode*)**
 
-  **insertTextBefore(*parentNode*, *text*, *referenceNode*)**
+**insertText(*parentNode*, *text*)**
 
-  **isCommentNode(*node*)**
+**insertTextBefore(*parentNode*, *text*, *referenceNode*)**
 
-  **isDocumentTypeNode(*node*)**
+**isCommentNode(*node*)**
 
-  **isElementNode(*node*)**
+**isDocumentTypeNode(*node*)**
 
-  **isRootNode(*node*)**
+**isElementNode(*node*)**
 
-  **isTextNode(*node*)**
+**isRootNode(*node*)**
 
-  **setDocumentMode(*document*, *mode*)**
+**isTextNode(*node*)**
 
-  **setDocumentType(*document*, *name*, *publicId*, *systemId*)**
+**setDocumentMode(*document*, *mode*)**
 
-  **setTemplateContent(*templateElement*, *contentElement*)**
+**setDocumentType(*document*, *name*, *publicId*, *systemId*)**
+
+**setTemplateContent(*templateElement*, *contentElement*)**
 
 ### **map(*fn*, *node*)**
 
