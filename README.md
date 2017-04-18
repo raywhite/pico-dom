@@ -192,25 +192,26 @@ This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible functi
 
 ### **map(*fn*, *node*)**
 
- - **fn** (`function`) - the callback that will recurse the AST.
+- **fn** (`function`) - the callback that will recurse the AST.
+- **node** (`object`) - the root node of the AST to map.
 
- - **node** (`object`) - the root node of the AST to map.
+The `map` method functions in a manner analogous to [`Array.prototype.map`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/map) - The callback function `fn` will be passed the current node; `fn(node)`. The order of iteration through the tree is from the most deeply nested child of `node` to the least deeply nested, and finally `node` itself. The callback should return the node(s) to replace `node` with in the new (mapped) tree - you may return a single node, an array of nodes or `null` (in which case no children will be appended to the `node` passed to the next invokation). Note that each node is cloned internally to avoid mutation, which means that it is safe to simply `return node`.
 
 ### **reduce(*fn*, *i*, *node*)**
 
- - **fn** (`function`) - the callback that will recurse the AST.
+- **fn** (`function`) - the callback that will recurse the AST.
+- **i** (`number|string|function`) - the initial value for the reduction.
+- **node** (`object`) - **node** (`object`) - the root node of the AST to reduce.
 
- - **i** (`number|string|function`) - the initial value for the reduction.
-
- - **node** (`object`) - **node** (`object`) - the root node of the AST to reduce.
+The `reduce` method functions in a manner analogous to [`Array.prototype.reduce`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) - The callback function `fn` will be passed the initial value `i` or the return value of the previous invokation, as well as the the current node; `fn(i, node)`. The order of iteration through the tree is from the most deeply nested child of `node` to the least deeply nested, and finally `node` itself. Note that each node is cloned internally to avoid mutation.
 
 ### **compose(...*fns*)**
 
- - **fns** (`...function`) - the functions to be composed.
+- **fns** (`...function`) - the functions to be composed.
 
 ### **sequence(...*fns*)**
 
- - **fns** (`...function`) - the functions to be sequenced.
+- **fns** (`...function`) - the functions to be sequenced.
 
 ### License
 
