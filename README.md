@@ -34,6 +34,8 @@ This wraps the `serialize` method from [parse5](https://github.com/inikulin/pars
 
 ### **adapter**
 
+[pico-dom](https://github.com/raywhite/pico-dom)'s API re-exposes and extends several methods exposed by [parse5](http://inikulin.github.io/parse5/interfaces/ast.treeadapter.html) [htmlparser2](https://github.com/fb55/htmlparser2) tree adapter. The exported `adapter` is extended with the methods `isRootNode`, `createTextNode`, `cloneNode` and `createNode` (which is JSX compatible), see docs for these below.
+
 **adoptAttributes(*recipient*, *attributes*)**
 
 - **recipient** (`object`) - the element to copy attributes into.
@@ -197,6 +199,8 @@ This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible functi
 
 The `map` method functions in a manner analogous to [`Array.prototype.map`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/map) - The callback function `fn` will be passed the current node; `fn(node)`. The order of iteration through the tree is from the most deeply nested child of `node` to the least deeply nested, and finally `node` itself. The callback should return the node(s) to replace `node` with in the new (mapped) tree - you may return a single node, an array of nodes or `null` (in which case no children will be appended to the `node` passed to the next invokation). Note that each node is cloned internally to avoid mutation, which means that it is safe to simply `return node`.
 
+The order in which arguments are passed to `map` is designed to allow for partial application using `Function.prototype.bind`.
+
 ### **reduce(*fn*, *i*, *node*)**
 
 - **fn** (`function`) - the callback that will recurse the AST.
@@ -204,6 +208,8 @@ The `map` method functions in a manner analogous to [`Array.prototype.map`](http
 - **node** (`object`) - **node** (`object`) - the root node of the AST to reduce.
 
 The `reduce` method functions in a manner analogous to [`Array.prototype.reduce`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) - The callback function `fn` will be passed the initial value `i` or the return value of the previous invokation, as well as the the current node; `fn(i, node)`. The order of iteration through the tree is from the most deeply nested child of `node` to the least deeply nested, and finally `node` itself. Note that each node is cloned internally to avoid mutation.
+
+The order in which arguments are passed to `reduce` is designed to allow for partial application using `Function.prototype.bind`.
 
 ### **compose(...*fns*)**
 
