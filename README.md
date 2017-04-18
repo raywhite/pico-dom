@@ -46,11 +46,11 @@ This wraps the `serialize` method from [parse5](https://github.com/inikulin/pars
 
 **cloneNode(*node*)**
 
-- node (`object`) - the node to clone.
+- **node** (`object`) - the node to clone.
 
 **createCommentNode(*data*)**
 
-- data (`string`) - the text content of the comment node.
+- **data** (`string`) - the text content of the comment node.
 
 **createDocument()**
 
@@ -62,15 +62,15 @@ Creates a document fragment that new nodes can be insterted into / appended to.
 
 **createElement(*tagName*, *namespaceURI*, *attributes*)**
 
-- tagName (`string`) - the elements tag name.
-- namespaceURI (`string`) - the elements namespace.
-- attributes (`array`) - the elements attributes.
+- **tagName** (`string`) - the elements tag name.
+- **namespaceURI** (`string`) - the elements namespace.
+- **attributes** (`array`) - the elements attributes.
 
 **createNode(*tagName*, *attrs*, *childNodes*)**
 
-- tagName (`string|function`) - the tag name, or function to be called with `attrs` as `props`.
-- attrs (`object`) - the attribute (`key`:`value`) pairs or `props`.
-- childNodes (`...object|array|string`) - the child nodes of this node.
+- **tagName** (`string|function`) - the tag name, or function to be called with `attrs` as `props`.
+- **attrs** (`object`) - the attribute (`key`:`value`) pairs or `props`.
+- **childNodes** (`...object|array|string`) - the child nodes of this node.
 
 This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
 
@@ -78,57 +78,117 @@ This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible functi
 
 **createTextNode(*data*)**
 
- - data (`string`) - the text nodes content.
+- **data** (`string`) - the text nodes content.
 
 **detachNode(*node*)**
 
+- **node** (`object`) - the node to detach from it's parent.
+
 **getAttrList(*element*)**
+
+- **element** (`object`) - the element to get the attributes list of.
 
 **getChildNodes(*node*)**
 
+- **node** (`object`) - the element to get the child nodes of.
+
 **getCommentNodeContent(*commentNode*)**
+
+- **commentNode** (`object`) - the comment node to get the content of. 
 
 **getDocumentMode(*document*)**
 
-**getDocumentTypeNodeName(*node*)**
+- **document** (`object`) - the document to get the mode of.
 
-**getDocumentTypeNodePublicId(*node*)**
+**getDocumentTypeNodeName(*doctypeNode*)**
 
-**getDocumentTypeNodeSystemId(*node*)**
+- **doctypeNode** (`object`) - the document type node to get the node name of.
+
+**getDocumentTypeNodePublicId(*doctypeNode*)**
+
+- **doctypeNode** (`object`) - the document type node to get the public id of.
+
+**getDocumentTypeNodeSystemId(*doctypeNode*)**
+
+- **doctypeNode** (`object`) - the document type node to get the system id of.
 
 **getFirstChild(*node*)**
 
+- **node** (`object`) - the node to get the first child of.
+
 **getNamespaceURI(*element*)**
+
+- **element** (`object`) - the element to get the namespace RUI of.
 
 **getParentNode(*node*)**
 
+- **node** (`object`) - the node to get the parent of.
+
 **getTagName(*element*)**
+
+- **node** (`object`) - the element node to get the tag name of.
 
 **getTemplateContent(*templateElement*)**
 
+- **templateElement** (`object`) - the template element node to get the content of.
+
 **getTextNodeContent(*textNode*)**
+
+- **textNode** (`object`) - the text node to get the content of.
 
 **insertBefore(*parentNode*, *newNode*, *referenceNode*)**
 
+- **parentNode** (`object`) - the parent node.
+- **newNode** (`object`) - the new node to insert.
+- **referenceNode** (`object`) - the reference node.
+
 **insertText(*parentNode*, *text*)**
+
+- **parentNode** (`object`) - the parent node.
+- **text** (`string`) - the text content.
 
 **insertTextBefore(*parentNode*, *text*, *referenceNode*)**
 
+- **parentNode** (`object`) - the parent node.
+- **text** (`string`) - the text content.
+- **referenceNode** (`object`) - the reference node.
+
 **isCommentNode(*node*)**
+
+- **node** (`object`) - the node to test.
 
 **isDocumentTypeNode(*node*)**
 
+- **node** (`object`) - the node to test.
+
 **isElementNode(*node*)**
+
+- **node** (`object`) - the node to test.
 
 **isRootNode(*node*)**
 
+- **node** (`object`) - the node to test.
+
 **isTextNode(*node*)**
+
+- **node** (`object`) - the node to test.
 
 **setDocumentMode(*document*, *mode*)**
 
+- **document** (`object`) - the document to set the mode of.
+- **mode** (`string`) - the document mode.
+
 **setDocumentType(*document*, *name*, *publicId*, *systemId*)**
 
+- **document** (`object`) - the document to set the mode of.
+- **name** (`string`) - the document mode.
+- **publicId** (`string`) - the document public id.
+- **systemId** (`string`) - the document system id.
+
 **setTemplateContent(*templateElement*, *contentElement*)**
+
+- **templateElement** (`object`) - the template element node to set the content of.
+- **contentElement** (`object`) - the fragment containing the content.
 
 ### **map(*fn*, *node*)**
 
@@ -150,7 +210,7 @@ This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible functi
 
 ### **sequence(...*fns*)**
 
- - **fns** (`...function`) - the functions to be composed.
+ - **fns** (`...function`) - the functions to be sequenced.
 
 ### License
 
