@@ -211,8 +211,18 @@ adapter.createNode = (function () {
       const len = keys.length;
 
       for (let i = 0; i < len; i++) {
-        const key = keys[i];
-        _attributes.push({ name: key, value: attributes[key] });
+        const name = keys[i];
+        const value = attributes[name];
+
+        /**
+         * `undefined` should just be treated as if it weren't present,
+         * but all other values will be coerced and rendered.
+         *
+         * NOTE: This appears to be what React does, but I'm not sure
+         * that the coercion is reasonable behaviour, it would make more
+         * sense if the module were to throw when a non-string was passed.
+         */
+        if (value !== undefined) _attributes.push({ name, value: String(value) });
       }
     }
 
