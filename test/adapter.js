@@ -199,11 +199,6 @@ describe('adapter', function () {
     });
 
     describe('createNode', function () {
-      /**
-       * TODO: This should be our JSX compatible DOM generation method -
-       * it's actually quite easy to just proxy to the native methods
-       * given the nature of the input in order to accomplish this.
-       */
       it('should construct a node properly', function () {
         const markup = trim(`
           <div id="0.1">
@@ -242,6 +237,39 @@ describe('adapter', function () {
             ),
           ),
         );
+
+        const dom = adapter.createDocumentFragment();
+        adapter.appendChild(dom, node);
+
+        // Serialized version matches.
+        expect(stringify(dom)).toEqual(markup);
+
+        const parsed = parse(markup);
+
+        // The internal node structure is the same.
+        expect(inspect(dom)).toEqual(inspect(parsed));
+      });
+
+      it('should support passing of `undefined` as an attribute', function () {
+        const markup = trim(`
+          <div>
+            no id above or below
+            <div class="present">
+              but a class here
+            </div>
+          </div>
+        `);
+
+        const attributes = { id: undefined };
+
+        const node = adapter.createNode('div', attributes, [
+          'no id above or below',
+          adapter.createNode(
+            'div',
+            Object.assign({}, attributes, { class: 'present' }),
+            'but a class here',
+          ),
+        ]);
 
         const dom = adapter.createDocumentFragment();
         adapter.appendChild(dom, node);
