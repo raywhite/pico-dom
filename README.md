@@ -205,7 +205,7 @@ The order in which arguments are passed to `map` is designed to allow for partia
 
 - **fn** (`function`) - the callback that will recurse the AST.
 - **i** (`number|string|function`) - the initial value for the reduction.
-- **node** (`object`) - **node** (`object`) - the root node of the AST to reduce.
+- **node** (`object`) - the root node of the AST to reduce.
 
 The `reduce` method functions in a manner analogous to [`Array.prototype.reduce`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) - The callback function `fn` will be passed the initial value `i` or the return value of the previous invokation, as well as the the current node; `fn(i, node)`. The order of iteration through the tree is from the most deeply nested child of `node` to the least deeply nested, and finally `node` itself. Note that each node is cloned internally to avoid mutation.
 
