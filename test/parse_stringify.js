@@ -57,4 +57,13 @@ describe('parse and stringify', function () {
     expect(parsestringify(true, undefined)).toBe('<html><head></head><body></body></html>');
     expect(parsestringify(false, null)).toBe('');
   });
+
+  // Special test case... trying to track a bug in query strings in attributes.
+  it('shouldn\'t encode ampersands in query strings', function () {
+    const _markup = '<img src="x.com/?a=b&c=d">';
+    const parsed = parse(_markup);
+
+    // NOTE: This esacapes ampersands... WTF?
+    expect(stringify(parsed)).toNotBe(_markup);
+  });
 });
