@@ -1,6 +1,6 @@
 {
   "name": "@raywhite/pico-dom",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "functional markup manipulation",
   "main": "./lib/index.js",
   "files": [
@@ -17,7 +17,9 @@
   },
   "author": "axdg <axdg@dfant.asia>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "parse5": "^3.0.2"
+  },
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
@@ -38,7 +40,6 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
     "expect": "^1.20.2",
-    "mocha": "^2.5.3",
-    "parse5": "^3.0.2"
+    "mocha": "^2.5.3"
   }
 }
