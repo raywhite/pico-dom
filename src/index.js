@@ -267,7 +267,7 @@ export const map = (function () {
       if (newNode === null) return;
 
       children.length ? // eslint-disable-line no-unused-expressions
-        adapter.insertBefore(parentNode, newNode, children[0]) :
+        adapter.insertBefore(parentNode, newNode, children[0]) : // eslint-disable-line indent
         adapter.appendChild(parentNode, newNode);
 
       return;
@@ -291,13 +291,11 @@ export const map = (function () {
       }
 
       children.length ? // eslint-disable-line no-unused-expressions
-        adapter.insertBefore(parentNode, _newNode, children[0]) :
+        adapter.insertBefore(parentNode, _newNode, children[0]) : // eslint-disable-line indent
         adapter.appendChild(parentNode, _newNode);
 
       len--;
     }
-
-    return;
   }
 
   /**
