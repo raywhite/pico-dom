@@ -1,6 +1,6 @@
 {
   "name": "@raywhite/pico-dom",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "functional markup manipulation",
   "main": "./lib/index.js",
   "files": [
@@ -17,28 +17,28 @@
   },
   "author": "axdg <axdg@dfant.asia>",
   "license": "MIT",
-  "dependencies": {
-    "parse5": "^3.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "babel": "^6.5.2",
-    "babel-cli": "^6.10.1",
-    "babel-core": "^6.10.4",
-    "babel-eslint": "^6.1.2",
-    "babel-plugin-transform-class-properties": "^6.10.2",
-    "babel-plugin-transform-es2015-block-scoping": "^6.10.1",
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-block-scoping": "^6.24.1",
     "babel-plugin-transform-object-assign": "^6.8.0",
-    "babel-plugin-transform-react-jsx": "^6.23.0",
-    "babel-preset-stage-2": "^6.11.0",
-    "babel-preset-latest": "^6.16.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.9.0",
-    "electron-mocha": "^3.0.5",
-    "electron-prebuilt": "^1.3.4",
-    "eslint": "^3.7.1",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-import": "^1.16.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "electron": "^1.6.11",
+    "electron-mocha": "^4.0.0",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0",
     "expect": "^1.20.2",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "parse5": "^3.0.2"
   }
 }

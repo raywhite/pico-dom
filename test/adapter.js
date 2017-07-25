@@ -323,7 +323,7 @@ describe('adapter', function () {
             adapter.createNode(
               'p',
               null,
-              'fourth text node'
+              'fourth text node',
             ),
           ],
         );
@@ -388,7 +388,7 @@ describe('adapter', function () {
             adapter.createNode(
               'p',
               null,
-              '3'
+              '3',
             ),
           ],
         );
@@ -437,7 +437,7 @@ describe('adapter', function () {
                 return adapter.createNode(
                   'li',
                   null,
-                  String(item)
+                  String(item),
                 );
               });
             }()),
@@ -453,7 +453,7 @@ describe('adapter', function () {
             { items: [1, 2, 3] },
             adapter.createNode('li', null, String(4)),
             adapter.createNode('li', null, String(5)),
-          )
+          ),
         );
 
         const dom = adapter.createDocumentFragment();
