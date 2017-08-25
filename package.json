@@ -13,7 +13,7 @@
     "test:renderer": "electron-mocha --renderer --compilers js:babel-register",
     "lint": "eslint src test",
     "compile": "babel src --out-dir lib",
-    "prepublish": "npm run compile"
+    "prepare": "npm run compile"
   },
   "author": "axdg <axdg@dfant.asia>",
   "license": "MIT",
@@ -21,8 +21,7 @@
     "parse5": "^3.0.2"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "^6.24.1",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
