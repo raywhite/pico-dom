@@ -7,6 +7,10 @@
     "lib",
     "src"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raywhite/pico-dom"
+  },
   "scripts": {
     "test": "npm run lint && npm run test:node && npm run test:renderer",
     "test:node": "mocha --compilers js:babel-register",
