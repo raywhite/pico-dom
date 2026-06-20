@@ -10,14 +10,3 @@ rules:
     ignore:
       - test.yml
       - zizmor.yml
-  # NOTE: impostor-commit stays ENABLED here so local audits
-  # (`mise run lint-actions`) verify it against the org's private
-  # `raywhite/github-workflows`, which a developer's `gh` token CAN list.
-  #
-  # In CI it fatally errors: release.yml references that private sibling
-  # repo, and the default GITHUB_TOKEN is scoped to the current repo only,
-  # so zizmor can't list its tags. A fine-grained PAT would resolve it but
-  # enterprise policy forces a 366-day expiry — operationally awkward. CI
-  # therefore loads `zizmor.ci.yml` (which disables only this audit) via
-  # `--config`. The `unpinned-uses: hash-pin` policy above still enforces
-  # SHA-pinning everywhere, which is the main thing impostor-commit catches.
