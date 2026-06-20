@@ -1,0 +1,26 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "module": "esnext",
+    // tsup's dts rollup unconditionally injects a (now-deprecated) `baseUrl`
+    // (rollup.js: `baseUrl: compilerOptions.baseUrl || "."`), even when we omit
+    // it. No published tsup drops this yet; silence until one does.
+    "ignoreDeprecations": "6.0",
+    "target": "es2022",
+    "lib": ["es2022", "dom"],
+    "strict": true,
+    "declaration": true,
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "noUncheckedIndexedAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "jsxFactory": "adapter.createNode"
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["node_modules", "lib", "src/**/*.test.ts"]
+}

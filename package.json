@@ -2,7 +2,22 @@
   "name": "@raywhite/pico-dom",
   "version": "0.8.0",
   "description": "functional markup manipulation",
+  "type": "module",
   "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./lib/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  },
   "files": [
     "lib",
     "src"
@@ -12,37 +27,35 @@
     "url": "https://github.com/raywhite/pico-dom"
   },
   "scripts": {
-    "test": "npm run lint && npm run test:node && npm run test:renderer",
-    "test:node": "mocha --compilers js:babel-register",
-    "test:renderer": "electron-mocha --renderer --compilers js:babel-register",
-    "lint": "eslint src test",
-    "compile": "babel src --out-dir lib",
-    "prepare": "npm run compile"
+    "prebuild": "rm -rf lib",
+    "build": "tsup",
+    "prepack": "npm run build",
+    "test:js": "vitest",
+    "test:types": "tsc --project tsconfig-test.json",
+    "test:lint": "eslint .",
+    "test": "npm run test:lint && npm run test:types && npm run test:js -- --run",
+    "release": "changeset publish"
   },
   "author": "axdg <axdg@dfant.asia>",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "prettier": "@raywhite/prettier-config",
   "dependencies": {
     "parse5": "^3.0.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-es2015-block-scoping": "^6.24.1",
-    "babel-plugin-transform-object-assign": "^6.8.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-latest": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "babel-register": "^6.9.0",
-    "electron": "^1.6.11",
-    "electron-mocha": "^4.0.0",
-    "eslint": "^4.3.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.1.0",
-    "expect": "^1.20.2",
-    "mocha": "^2.5.3"
+    "@changesets/cli": "^2.31.0",
+    "@raywhite/eslint-config": "^3.0.1",
+    "@raywhite/prettier-config": "^0.1.2",
+    "@tsconfig/recommended": "^1.0.13",
+    "@types/node": "^24.13.1",
+    "eslint": "^9.39.4",
+    "prettier": "^3.8.3",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.8"
   }
 }
