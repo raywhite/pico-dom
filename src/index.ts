@@ -1,6 +1,6 @@
 import { parseFragment, parse as _parse, serialize, treeAdapters } from 'parse5';
 
-import type { Attribute, Node, PicoAdapter, Props } from './types';
+import type { Attribute, Node, PicoAdapter, Props, RootNode } from './types';
 
 /**
  * This entire module interacts (parses from, transforms,
@@ -60,7 +60,7 @@ export function stringify(model: Node): string {
  *
  * @param node - a node
  */
-adapter.isRootNode = function (node: Node): boolean {
+adapter.isRootNode = function (node: Node): node is RootNode {
   return node.type === 'root';
 };
 
