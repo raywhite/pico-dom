@@ -3,18 +3,18 @@
   "version": "0.8.0",
   "description": "functional markup manipulation",
   "type": "module",
-  "main": "./lib/index.js",
-  "module": "./lib/index.mjs",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/index.d.mts",
-        "default": "./lib/index.mjs"
-      },
-      "require": {
         "types": "./lib/index.d.ts",
         "default": "./lib/index.js"
+      },
+      "require": {
+        "types": "./lib/index.d.cts",
+        "default": "./lib/index.cjs"
       }
     }
   },

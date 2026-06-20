@@ -6,12 +6,12 @@
  * depracated and the pragma should be set in `.babelrc` anyway.
  */
 
-import { parse, stringify, adapter } from '../src/index';
-import { inspect, trim, XHTML_NAMESPACE } from './test_utilities';
-import type { Props } from '../src/types';
+import { parse, stringify, adapter } from '../src/index.ts';
+import { inspect, trim, XHTML_NAMESPACE } from './test_utilities.ts';
+import type { Props } from '../src/types.ts';
 
-describe('adapter', function () {
-  it('should expose all of the methods that wrapped adapter does', function () {
+describe('adapter', () => {
+  it('should expose all of the methods that wrapped adapter does', () => {
     // htmlparser2 `treeAdaptor` methods exposed by parse5 - no need to test in depth.
     const fns = [
       'adoptAttributes',
@@ -50,7 +50,7 @@ describe('adapter', function () {
     // Plus the new methods that we've appended.
     fns.push('isRootNode', 'createTextNode', 'cloneNode', 'createNode');
 
-    fns.forEach(function (name) {
+    fns.forEach((name) => {
       expect(typeof adapter[name]).toBe('function');
     });
 
@@ -58,19 +58,19 @@ describe('adapter', function () {
     expect(fns.sort()).toEqual(Object.keys(adapter).sort());
   });
 
-  describe('appended methods', function () {
-    describe('isRootNode', function () {
-      it('exposes a method to detect the root node', function () {
+  describe('appended methods', () => {
+    describe('isRootNode', () => {
+      it('exposes a method to detect the root node', () => {
         const dom = parse('<div></div>');
         expect(adapter.isRootNode(dom)).toBe(true);
       });
     });
 
-    describe('createTextNode', function () {
+    describe('createTextNode', () => {
       const data = 'some text';
       const textNode = adapter.createTextNode(data);
 
-      it('exposes a method to create a detached text node', function () {
+      it('exposes a method to create a detached text node', () => {
         // Is this a valid text node?
         expect(adapter.isTextNode(textNode)).toBe(true);
         expect(adapter.isElementNode(textNode)).toBe(false);
@@ -82,7 +82,7 @@ describe('adapter', function () {
         expect(adapter.getParentNode(textNode)).toBe(null);
       });
 
-      it('should be attachable and able to be appended to', function () {
+      it('should be attachable and able to be appended to', () => {
         // Is the node attachable?
         const fragment = adapter.createDocumentFragment();
         const p = adapter.createElement('p', XHTML_NAMESPACE, []);
@@ -90,7 +90,7 @@ describe('adapter', function () {
         adapter.appendChild(fragment, p);
 
         // Is it attached and does it have the correct parent node etc.
-        const node = adapter.getChildNodes(adapter.getChildNodes(fragment)[0])[0];
+        const node = adapter.getChildNodes(adapter.getChildNodes(fragment)[0]!)[0]!;
         expect(adapter.isTextNode(node)).toBe(true);
         const parentNode = adapter.getParentNode(node)!;
         expect(adapter.getParentNode(parentNode)).toBe(fragment);
@@ -106,9 +106,9 @@ describe('adapter', function () {
       });
     });
 
-    describe('cloneNode', function () {
+    describe('cloneNode', () => {
       // TODO: There are several document types (like a directive) that aren't covered here.
-      it('should clone a node of any type', function () {
+      it('should clone a node of any type', () => {
         // Comment node.
         (function () {
           const node = adapter.createCommentNode('some comment content');
@@ -177,7 +177,7 @@ describe('adapter', function () {
         }());
       });
 
-      it('the cloned node should be shallow and detached', function () {
+      it('the cloned node should be shallow and detached', () => {
         const dom = adapter.createDocumentFragment();
         const node = adapter.createElement('p', XHTML_NAMESPACE, []);
         const textNode = adapter.createTextNode('text');
@@ -198,8 +198,8 @@ describe('adapter', function () {
       });
     });
 
-    describe('createNode', function () {
-      it('should construct a node properly', function () {
+    describe('createNode', () => {
+      it('should construct a node properly', () => {
         const markup = trim(`
           <div id="0.1">
             first text node
@@ -250,7 +250,7 @@ describe('adapter', function () {
         expect(inspect(dom)).toEqual(inspect(parsed));
       });
 
-      it('should support passing of `undefined` as an attribute', function () {
+      it('should support passing of `undefined` as an attribute', () => {
         const markup = trim(`
           <div>
             no id above or below
@@ -266,7 +266,7 @@ describe('adapter', function () {
           'no id above or below',
           adapter.createNode(
             'div',
-            Object.assign({}, attributes, { class: 'present' }),
+            { ...attributes, class: 'present'},
             'but a class here',
           ),
         ]);
@@ -283,7 +283,7 @@ describe('adapter', function () {
         expect(inspect(dom)).toEqual(inspect(parsed));
       });
 
-      it('should flatten arrays present in child nodes', function () {
+      it('should flatten arrays present in child nodes', () => {
         const markup = trim(`
           <div>
             first text node
@@ -340,7 +340,7 @@ describe('adapter', function () {
         expect(inspect(dom)).toEqual(inspect(parsed));
       });
 
-      it('should interoperate with other adapter methods', function () {
+      it('should interoperate with other adapter methods', () => {
         const markup = trim(`
           <div>
             0
@@ -378,7 +378,7 @@ describe('adapter', function () {
                   adapter.createElement('li', XHTML_NAMESPACE, [{ name: 'id', value: '2' }]),
                 ];
 
-                nodes.forEach(function (node, index) { // eslint-disable-line no-shadow
+                nodes.forEach((node, index) => {  
                   adapter.insertText(node, String(index + 1));
                 });
 
@@ -405,7 +405,7 @@ describe('adapter', function () {
         expect(inspect(dom)).toEqual(inspect(parsed));
       });
 
-      it('should function with functional components', function () {
+      it('should function with functional components', () => {
         const markup = trim(`
           <div>
             <ul>
@@ -424,18 +424,16 @@ describe('adapter', function () {
          * that were passed in as props.
          */
         function list(props: Props) {
-          const { items, children } = props as { items: number[]; children: unknown[] };
+          const { children, items } = props as { items: number[]; children: unknown[] };
           return adapter.createNode(
             'ul',
             null,
             ...(function () {
-              return items.map(function (item) {
-                return adapter.createNode(
+              return items.map((item) => adapter.createNode(
                   'li',
                   null,
                   String(item),
-                );
-              });
+                ));
             }()),
             ...children,
           );
@@ -464,7 +462,7 @@ describe('adapter', function () {
         expect(inspect(dom)).toEqual(inspect(parsed));
       });
 
-      it('should function identically when compiled from JSX', function () {
+      it('should function identically when compiled from JSX', () => {
         const markup = trim(`
           <div>
             <ul>
@@ -483,14 +481,12 @@ describe('adapter', function () {
          * that were passed in as props - this is the JSX version of
          * the list function above.
          */
-        function List(props: Props) { // eslint-disable-line no-unused-vars
-          const { items, children } = props as { items: number[]; children: unknown[] };
+        function List(props: Props) {  
+          const { children, items } = props as { items: number[]; children: unknown[] };
           return (
             <ul>
               {(function () {
-                return items.map(function (item) {
-                  return <li>{`${item}`}</li>;
-                });
+                return items.map((item) => <li>{`${item}`}</li>);
               }())}
               {children}
             </ul>
@@ -519,21 +515,19 @@ describe('adapter', function () {
         expect(inspect(dom)).toEqual(inspect(parsed));
       });
 
-      it('should handle the special fragment `tagName`', function () {
+      it('should handle the special fragment `tagName`', () => {
         /**
          * A component to make a little text block where
          * the root node that is provided is actually a
          * document fragment.
          */
-        function TextBlock(props: Props) { // eslint-disable-line no-unused-vars
-          const { text, items } = props as { text: string; items: string[] };
+        function TextBlock(props: Props) {  
+          const { items, text } = props as { text: string; items: string[] };
           return (
             <fragment>
               <p>{text}</p>
               <ul>
-                {items.map(function (item) {
-                  return <li>{item}</li>;
-                })}
+                {items.map((item) => <li>{item}</li>)}
               </ul>
             </fragment>
           );
@@ -569,15 +563,15 @@ describe('adapter', function () {
     });
   });
 
-  describe('monkey patched methods', function () {
+  describe('monkey patched methods', () => {
     /**
      * TODO: There are some node types that should be appendable
      * or insertable and are missing.
      */
-    describe('appendChild', function () {
+    describe('appendChild', () => {
       // Our initial dom is total empty.
       const dom = adapter.createDocumentFragment();
-      it('should append a node of any type', function () {
+      it('should append a node of any type', () => {
         const commentNode = adapter.createCommentNode('comment content');
         const elementNode = adapter.createElement('div', XHTML_NAMESPACE, []);
         const textNode = adapter.createTextNode('some text');
@@ -588,7 +582,7 @@ describe('adapter', function () {
          *
          * <!--comment content--><div></div> , and then some<!--reference node-->
          */
-        [commentNode, elementNode, textNode].forEach(function (node) {
+        [commentNode, elementNode, textNode].forEach((node) => {
           adapter.appendChild(dom, node);
         });
 
@@ -601,7 +595,7 @@ describe('adapter', function () {
         `));
       });
 
-      it('should merge text nodes as expected', function () {
+      it('should merge text nodes as expected', () => {
         const textNode = adapter.createTextNode(', and then some');
 
         // Check the length first, so we can make sure it doesn't change.
@@ -622,7 +616,7 @@ describe('adapter', function () {
       });
     });
 
-    describe('insertBefore', function () {
+    describe('insertBefore', () => {
       /**
        * The initial document fragment is simple, just a comment node;
        *
@@ -632,7 +626,7 @@ describe('adapter', function () {
       const referenceNode = adapter.createCommentNode('reference node');
       adapter.appendChild(dom, referenceNode);
 
-      it('should insert a node if any applicable type', function () {
+      it('should insert a node if any applicable type', () => {
         // These nodes are initially detached, they'll be inserted for tests.
         const commentNode = adapter.createCommentNode('comment content');
         const elementNode = adapter.createElement('div', XHTML_NAMESPACE, []);
@@ -646,7 +640,7 @@ describe('adapter', function () {
          *
          * <!--comment content--><div></div> , and then some<!--reference node-->
          */
-        [commentNode, elementNode, textNode].forEach(function (node) {
+        [commentNode, elementNode, textNode].forEach((node) => {
           adapter.insertBefore(dom, node, referenceNode);
         });
 
@@ -659,12 +653,12 @@ describe('adapter', function () {
         `));
       });
 
-      it('should treat text nodes as expected', function () {
+      it('should treat text nodes as expected', () => {
         const nodes = adapter.getChildNodes(dom);
         expect(nodes.length).toBe(4);
 
         // Get a new reference to the text node.
-        const textNode = nodes[2];
+        const textNode = nodes[2]!;
 
         // Create and append a new text node.
         const newNode = adapter.createTextNode('some text');

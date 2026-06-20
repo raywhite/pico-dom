@@ -1,5 +1,5 @@
-import { parse, stringify } from '../src/index';
-import { trim, inspect } from './test_utilities';
+import { parse, stringify } from '../src/index.ts';
+import { trim, inspect } from './test_utilities.ts';
 
 /**
  * TODO: Make assertions about the root node and the location
@@ -8,7 +8,7 @@ import { trim, inspect } from './test_utilities';
  * as a document (however a browser would) - test for this
  * need to be added.
  */
-describe('parse and stringify', function () {
+describe('parse and stringify', () => {
   const markup = trim(`
     <div>
       <a href="http://somedomain.haus">anchor</a>
@@ -25,18 +25,18 @@ describe('parse and stringify', function () {
     </div>
   `);
 
-  it('should be functions', function () {
+  it('should be functions', () => {
     expect(typeof parse).toBe('function');
     expect(typeof stringify).toBe('function');
   });
 
-  it('parse and stringify should have parity', function () {
+  it('parse and stringify should have parity', () => {
     const parsed = parse(markup);
     const stringifyd = stringify(parsed);
     expect(stringifyd).toBe(markup);
   });
 
-  it('parse should produce a dom tree in htmlparser2 format', function () {
+  it('parse should produce a dom tree in htmlparser2 format', () => {
     const parsed = parse(markup);
     const str = inspect(parsed);
 
@@ -45,8 +45,8 @@ describe('parse and stringify', function () {
   });
 
   // NOTE: Special test case... bug dealing with undefined being returned.
-  it('should nont fail when passed a nonsensical value', function () {
-    const parsestringify = function (doc?: boolean | string | null, markup?: string | null) { // eslint-disable-line no-shadow
+  it('should nont fail when passed a nonsensical value', () => {
+    const parsestringify = function (doc?: boolean | string | null, markup?: string | null) {  
       return stringify(parse(doc as never, markup as never));
     };
 
@@ -58,7 +58,7 @@ describe('parse and stringify', function () {
   });
 
   // Special test case... trying to track a bug in query strings in attributes.
-  it('shouldn\'t encode ampersands in query strings', function () {
+  it('shouldn\'t encode ampersands in query strings', () => {
     const _markup = '<img src="x.com/?a=b&c=d">';
     const parsed = parse(_markup);
 

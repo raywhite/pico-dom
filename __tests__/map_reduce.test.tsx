@@ -1,9 +1,9 @@
 /** @jsx adapter.createNode */
-import { parse, stringify, map, reduce, adapter } from '../src/index';
-import { count, inspect, noop, XHTML_NAMESPACE } from './test_utilities';
-import type { Node, Props } from '../src/types';
+import { parse, stringify, map, reduce, adapter } from '../src/index.ts';
+import { count, inspect, noop, XHTML_NAMESPACE } from './test_utilities.ts';
+import type { Node, Props } from '../src/types.ts';
 
-describe('dom transformation methods', function () {
+describe('dom transformation methods', () => {
   const LIST_ITEM = '<li';
   const COMMENT = 'comment node';
   const TEXT_ONE = 'first text node';
@@ -54,7 +54,7 @@ describe('dom transformation methods', function () {
 
     // An unordered list.
     const ul = adapter.createElement('ul', XHTML_NAMESPACE, [{ name: 'id', value: '0.1.1' }]);
-    ['0.1.1.1', '0.1.1.2', '0.1.1.3'].forEach(function (i) {
+    ['0.1.1.1', '0.1.1.2', '0.1.1.3'].forEach((i) => {
       const li = adapter.createElement('li', XHTML_NAMESPACE, [{ name: 'id', value: i }]);
       adapter.appendChild(ul, li);
     });
@@ -67,8 +67,8 @@ describe('dom transformation methods', function () {
     return indexed;
   }
 
-  describe('map', function () {
-    it('is intended to be partially applied for composition', function () {
+  describe('map', () => {
+    it('is intended to be partially applied for composition', () => {
       const mapper = map.bind(null, noop as unknown as (node: Node) => Node);
       expect(typeof mapper).toBe('function');
     });
@@ -78,8 +78,8 @@ describe('dom transformation methods', function () {
      * Drunk, will sort in the morning - possibly better to just test
      * the exported `map` and `reduce` functions first.
      */
-    describe('partially applied map', function () {
-      it('should pass cloned and detached nodes to the callback', function () {
+    describe('partially applied map', () => {
+      it('should pass cloned and detached nodes to the callback', () => {
         let calls = 0;
         function fn(node: Node) {
           expect(node.next).toBe(null);
@@ -97,7 +97,7 @@ describe('dom transformation methods', function () {
         expect(calls).toBe(5);
       });
 
-      it('should traverse the dom in the correct order', function () {
+      it('should traverse the dom in the correct order', () => {
         /**
          * NOTE: These tests are wrapped for scoping reasons.
          * I'm to lazy to come up with multiple coherant
@@ -137,7 +137,7 @@ describe('dom transformation methods', function () {
 
           function fn(node: Node) {
             if (adapter.isElementNode(node)) {
-              const value = adapter.getAttrList(node)[0].value;
+              const {value} = (adapter.getAttrList(node)[0]!);
               ids.unshift(value);
             }
 
@@ -173,7 +173,7 @@ describe('dom transformation methods', function () {
        *
        * SEE: `https://github.com/raywhite/office-sites/issues/889`
        */
-      it('should handle a single text node child', function () {
+      it('should handle a single text node child', () => {
         const markup = '<a src="site.io">text</a>';
 
         const model = parse(markup);
@@ -189,14 +189,14 @@ describe('dom transformation methods', function () {
 
           const mapper = map.bind(null, fn);
           const mapped = mapper(model);
-          const child = adapter.getChildNodes(mapped)[0];
+          const child = adapter.getChildNodes(mapped)[0]!;
           expect(adapter.isTextNode(child)).toBe(true);
           expect(adapter.getTextNodeContent(child)).toBe('text');
           expect(stringify(mapped)).toBe('text');
         }());
 
         (function () {
-          function ChildReplacer(props: Props) { // eslint-disable-line no-unused-vars
+          function ChildReplacer(props: Props) {  
             const { children } = props;
             return children as unknown as Node;
           }
@@ -211,14 +211,14 @@ describe('dom transformation methods', function () {
 
           const mapper = map.bind(null, fn);
           const mapped = mapper(model);
-          const child = adapter.getChildNodes(mapped)[0];
+          const child = adapter.getChildNodes(mapped)[0]!;
           expect(adapter.isTextNode(child)).toBe(true);
           expect(adapter.getTextNodeContent(child)).toBe('text');
           expect(stringify(mapped)).toBe('text');
         }());
       });
 
-      it('should correctly remove nodes where null is returned', function () {
+      it('should correctly remove nodes where null is returned', () => {
         /**
          * NOTE: Encapsulated for the same reason as above.
          *
@@ -274,7 +274,7 @@ describe('dom transformation methods', function () {
         }());
       });
 
-      it('should correctly replace nodes where a single node is returned', function () {
+      it('should correctly replace nodes where a single node is returned', () => {
         const INJECTED = 'injected text node';
         /**
          * Return the original node, unless;
@@ -314,13 +314,13 @@ describe('dom transformation methods', function () {
         expect(inspect(mapped)).toMatch(re);
       });
 
-      it('should correctly append multiple nodes where an array is returned', function () {
+      it('should correctly append multiple nodes where an array is returned', () => {
         /**
          * Duplicate all list items that occur - assign them a class.
          */
         function fn(node: Node) {
           if (adapter.isElementNode(node) && adapter.getTagName(node) === 'li') {
-            const id = adapter.getAttrList(node)[0].value;
+            const id = adapter.getAttrList(node)[0]!.value;
             const newNodes = [
               null, // Just to make sure it's filtered.
               node,
@@ -351,7 +351,7 @@ describe('dom transformation methods', function () {
          */
         function push(node: Node) {
           if (adapter.isElementNode(node)) {
-            ids.unshift(adapter.getAttrList(node)[0].value);
+            ids.unshift(adapter.getAttrList(node)[0]!.value);
           }
 
           return node;
@@ -375,16 +375,16 @@ describe('dom transformation methods', function () {
     });
   });
 
-  describe('reduce', function () {
-    it('is intended to be partially applied for composition', function () {
+  describe('reduce', () => {
+    it('is intended to be partially applied for composition', () => {
       const reducer = reduce.bind(null, noop as unknown as (acc: unknown, node: Node) => unknown);
       expect(typeof reducer).toBe('function');
     });
 
     // Second parameter is a `string`, `number` or `function`.
-    it('should accept a second parameter as an initial value', function () {
+    it('should accept a second parameter as an initial value', () => {
       // TODO: Increase the scope of this test, it doesn't cover enough.
-      (['', 1, function () { return {}; }] as const).forEach(function (i) {
+      (['', 1, function () { return {}; }] as const).forEach((i) => {
         const reducer = reduce.bind(null, noop as unknown as (acc: unknown, node: Node) => unknown, i);
         expect(typeof reducer).toBe('function');
       });
@@ -395,9 +395,9 @@ describe('dom transformation methods', function () {
      * playing around with the adapter methods provided by parse5's
      * `htmlparser2` adapter.
      */
-    describe('partially applied reduce', function () {
+    describe('partially applied reduce', () => {
       // TODO: This function is completely broken... sort it.
-      it('should traverse the dom in the correct order', function () {
+      it('should traverse the dom in the correct order', () => {
         /**
          * As with `map`, we have two several tests. Firstly, we can
          * check both the type of each node as it comes through.
@@ -428,7 +428,7 @@ describe('dom transformation methods', function () {
             return p;
           }
 
-          const reducer = reduce.bind(null, fn, '');
+          const reducer = (node: Node) => reduce(fn, '', node);
           const dom = createModel();
 
           expect(reducer(dom).trim()).toBe('root comment text div text');
@@ -443,7 +443,7 @@ describe('dom transformation methods', function () {
           const ids: string[] = [];
           function fn(p: number, node: Node) {
             if (adapter.isElementNode(node)) {
-              const id = adapter.getAttrList(node)[0].value;
+              const id = adapter.getAttrList(node)[0]!.value;
               ids.unshift(id);
               p++;
             }
@@ -451,7 +451,7 @@ describe('dom transformation methods', function () {
             return p;
           }
 
-          const reducer = reduce.bind(null, fn, 0);
+          const reducer = (node: Node) => reduce(fn, 0, node);
           const dom = createIndexedModel();
 
           const output = reducer(dom);
@@ -468,7 +468,7 @@ describe('dom transformation methods', function () {
       });
 
       // TODO: Here the value 'init' is a function that just returns an array.
-      it('if the initial value is a function, the return value should be passed', function () {
+      it('if the initial value is a function, the return value should be passed', () => {
         /**
          * A function to be called to create the initial value.
          */
@@ -480,12 +480,12 @@ describe('dom transformation methods', function () {
          * Unshifts tag names or types into the previous value.
          */
         function fn(p: string[], node: Node) {
-          const type = node.type;
+          const {type} = node;
           p.unshift(type === 'tag' ? (node as { name: string }).name : type);
           return p;
         }
 
-        const reducer = reduce.bind(null, fn, i);
+        const reducer = (node: Node) => reduce(fn, i, node);
         const dom = createIndexedModel();
 
         expect(reducer(dom)).toEqual([

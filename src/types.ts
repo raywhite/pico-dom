@@ -15,12 +15,12 @@
  * downstream by @raywhite/markup (its JSX compiles to `adapter.createNode`).
  */
 
-export interface Attribute {
+export type Attribute = {
   name: string;
   value: string;
 }
 
-interface BaseNode {
+type BaseNode = {
   type: string;
   parent: ParentNode | null;
   prev: Node | null;
@@ -31,17 +31,17 @@ interface BaseNode {
   nextSibling?: Node | null;
 }
 
-export interface TextNode extends BaseNode {
+export type TextNode = {
   type: 'text';
   data: string;
-}
+} & BaseNode
 
-export interface CommentNode extends BaseNode {
+export type CommentNode = {
   type: 'comment';
   data: string;
-}
+} & BaseNode
 
-export interface ElementNode extends BaseNode {
+export type ElementNode = {
   type: 'tag' | 'script' | 'style';
   name: string;
   namespace: string;
@@ -49,13 +49,13 @@ export interface ElementNode extends BaseNode {
   children: Node[];
   'x-attribsNamespace'?: { [name: string]: string };
   'x-attribsPrefix'?: { [name: string]: string };
-}
+} & BaseNode
 
-export interface RootNode extends BaseNode {
+export type RootNode = {
   type: 'root';
   name: 'root';
   children: Node[];
-}
+} & BaseNode
 
 export type Node = TextNode | CommentNode | ElementNode | RootNode;
 
@@ -68,13 +68,31 @@ export type ParentNode = ElementNode | RootNode;
 export type Props = Record<string, unknown> & { children?: unknown[] };
 
 /**
+ * Global JSX typings for the classic runtime (`jsxFactory: adapter.createNode`).
+ * The element type produced IS this module's `Node`, which is exactly what
+ * @raywhite/markup consumes. Intrinsic elements accept arbitrary props since
+ * `createNode` coerces any attribute to a string.
+ */
+declare global {
+  namespace JSX {
+    type Element = Node;
+    interface ElementChildrenAttribute {
+      children: object;
+    }
+    interface IntrinsicElements {
+      [tagName: string]: Record<string, unknown>;
+    }
+  }
+}
+
+/**
  * The methods the source actually uses on the htmlparser2 adapter, plus
  * the custom methods the source adds (`isRootNode`, `createTextNode`, and
  * the `appendChild`/`insertBefore`/`cloneNode`/`createNode` overrides).
  * Loosely typed where the underlying adapter is loose; this is a structural
  * cast target, not a faithful parse5 typing.
  */
-export interface PicoAdapter {
+export type PicoAdapter = {
   // Base htmlparser2 adapter methods used by the source.
   createDocument(): RootNode;
   createDocumentFragment(): RootNode;
