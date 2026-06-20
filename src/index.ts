@@ -260,6 +260,23 @@ adapter.createNode = (function () {
 // Export the adapter.
 export { adapter };
 
+/**
+ * Public node types. `Node` is the JSX-element contract downstream consumers
+ * (e.g. @raywhite/markup, whose JSX compiles to `adapter.createNode`) bind to;
+ * `Props` is the component prop shape. Type-only so they stay erasable and
+ * don't affect the value output. `PicoAdapter` stays internal — it's an
+ * implementation detail of the parse5 cast, not a consumer contract.
+ */
+export type {
+  Attribute,
+  CommentNode,
+  ElementNode,
+  Node,
+  Props,
+  RootNode,
+  TextNode,
+} from './types';
+
 export const map = (function () {
   /**
    * Prepend the provided nodes to the array of child nodes
