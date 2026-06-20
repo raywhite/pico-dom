@@ -1,4 +1,3 @@
-import expect from 'expect';
 import { parse, stringify } from '../src/index';
 import { trim, inspect } from './test_utilities';
 
@@ -27,8 +26,8 @@ describe('parse and stringify', function () {
   `);
 
   it('should be functions', function () {
-    expect(parse).toBeA('function');
-    expect(stringify).toBeA('function');
+    expect(typeof parse).toBe('function');
+    expect(typeof stringify).toBe('function');
   });
 
   it('parse and stringify should have parity', function () {
@@ -47,8 +46,8 @@ describe('parse and stringify', function () {
 
   // NOTE: Special test case... bug dealing with undefined being returned.
   it('should nont fail when passed a nonsensical value', function () {
-    const parsestringify = function (doc, markup) { // eslint-disable-line no-shadow
-      return stringify(parse(doc, markup));
+    const parsestringify = function (doc?: boolean | string | null, markup?: string | null) { // eslint-disable-line no-shadow
+      return stringify(parse(doc as never, markup as never));
     };
 
     expect(parsestringify(null)).toBe('');
@@ -64,6 +63,6 @@ describe('parse and stringify', function () {
     const parsed = parse(_markup);
 
     // NOTE: This esacapes ampersands... WTF?
-    expect(stringify(parsed)).toNotBe(_markup);
+    expect(stringify(parsed)).not.toBe(_markup);
   });
 });

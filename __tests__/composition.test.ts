@@ -1,4 +1,3 @@
-import expect from 'expect';
 import { compose, sequence } from '../src/index';
 import { append, noop } from './test_utilities';
 
@@ -6,7 +5,7 @@ describe('composition methods', function () {
   describe('compose', function () {
     it('is a higher order function', function () {
       const composed = compose(noop);
-      expect(composed).toBeA('function');
+      expect(typeof composed).toBe('function');
     });
 
     it('should compose functions right to left', function () {
@@ -18,7 +17,7 @@ describe('composition methods', function () {
   describe('sequence', function () {
     it('is a higher order function', function () {
       const sequenced = sequence(noop);
-      expect(sequenced).toBeA('function');
+      expect(typeof sequenced).toBe('function');
     });
 
     it('should compose functions left to right', function () {

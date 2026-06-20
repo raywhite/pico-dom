@@ -6,9 +6,9 @@
  * depracated and the pragma should be set in `.babelrc` anyway.
  */
 
-import expect from 'expect';
 import { parse, stringify, adapter } from '../src/index';
 import { inspect, trim, XHTML_NAMESPACE } from './test_utilities';
+import type { Props } from '../src/types';
 
 describe('adapter', function () {
   it('should expose all of the methods that wrapped adapter does', function () {
@@ -51,7 +51,7 @@ describe('adapter', function () {
     fns.push('isRootNode', 'createTextNode', 'cloneNode', 'createNode');
 
     fns.forEach(function (name) {
-      expect(adapter[name]).toBeA('function');
+      expect(typeof adapter[name]).toBe('function');
     });
 
     // Just to make sure we've got everything covered.
@@ -92,16 +92,16 @@ describe('adapter', function () {
         // Is it attached and does it have the correct parent node etc.
         const node = adapter.getChildNodes(adapter.getChildNodes(fragment)[0])[0];
         expect(adapter.isTextNode(node)).toBe(true);
-        const parentNode = adapter.getParentNode(node);
+        const parentNode = adapter.getParentNode(node)!;
         expect(adapter.getParentNode(parentNode)).toBe(fragment);
-        expect(adapter.isRootNode(adapter.getParentNode(parentNode))).toBe(true);
+        expect(adapter.isRootNode(adapter.getParentNode(parentNode)!)).toBe(true);
         expect(adapter.isTextNode(node)).toBe(true);
         expect(adapter.getTextNodeContent(node)).toBe(data);
 
         // Can we add text content to the node?
         const appended = ', and now some appended text';
         adapter.insertText(p, appended);
-        const _textNode = adapter.getChildNodes(p).pop();
+        const _textNode = adapter.getChildNodes(p).pop()!;
         expect(adapter.getTextNodeContent(_textNode)).toBe(data + appended);
       });
     });
@@ -115,7 +115,7 @@ describe('adapter', function () {
           const clone = adapter.cloneNode(node);
 
           // They are not the same object, but equal in all other regards.
-          expect(node).toNotBe(clone);
+          expect(node).not.toBe(clone);
           expect(inspect(node)).toBe(inspect(clone));
         }());
 
@@ -137,7 +137,7 @@ describe('adapter', function () {
           adapter.detachNode(clone);
 
           // They are not the same object, but equal in all other regards.
-          expect(node).toNotBe(clone);
+          expect(node).not.toBe(clone);
           expect(inspect(node)).toBe(inspect(clone));
         }());
 
@@ -149,7 +149,7 @@ describe('adapter', function () {
             const clone = adapter.cloneNode(node);
 
             // They are not the same object, but equal in all other regards.
-            expect(node).toNotBe(clone);
+            expect(node).not.toBe(clone);
             expect(inspect(node)).toBe(inspect(clone));
           }());
 
@@ -159,7 +159,7 @@ describe('adapter', function () {
             const clone = adapter.cloneNode(node);
 
             // They are not the same object, but equal in all other regards.
-            expect(node).toNotBe(clone);
+            expect(node).not.toBe(clone);
             expect(inspect(node)).toBe(inspect(clone));
           }());
         }());
@@ -171,7 +171,7 @@ describe('adapter', function () {
           const clone = adapter.cloneNode(node);
 
           // There are not the same object, but equal in all other regards.
-          expect(node).toNotBe(clone);
+          expect(node).not.toBe(clone);
           expect(adapter.getTextNodeContent(clone)).toBe(CONTENT);
           expect(inspect(node)).toBe(inspect(clone));
         }());
@@ -422,13 +422,9 @@ describe('adapter', function () {
          * Generates an unordered list containing one item for each
          * element in the items props and then appends and children
          * that were passed in as props.
-         *
-         * @param {Object} properties
-         *
-         * @returns {Object} node
          */
-        function list(props) {
-          const { items, children } = props;
+        function list(props: Props) {
+          const { items, children } = props as { items: number[]; children: unknown[] };
           return adapter.createNode(
             'ul',
             null,
@@ -486,16 +482,9 @@ describe('adapter', function () {
          * element in the items props and then appends and children
          * that were passed in as props - this is the JSX version of
          * the list function above.
-         *
-         * TODO: This module requires AirBnB JSX linting, this is
-         * probably why `LIST` is registering as an unnused var.
-         *
-         * @param {Object} properties
-         *
-         * @returns {Object} node
          */
-        function List(props) { // eslint-disable-line no-unused-vars
-          const { items, children } = props;
+        function List(props: Props) { // eslint-disable-line no-unused-vars
+          const { items, children } = props as { items: number[]; children: unknown[] };
           return (
             <ul>
               {(function () {
@@ -535,13 +524,9 @@ describe('adapter', function () {
          * A component to make a little text block where
          * the root node that is provided is actually a
          * document fragment.
-         *
-         * @param {Object} props
-         *
-         * @returns {Object} node
          */
-        function TextBlock(props) { // eslint-disable-line no-unused-vars
-          const { text, items } = props;
+        function TextBlock(props: Props) { // eslint-disable-line no-unused-vars
+          const { text, items } = props as { text: string; items: string[] };
           return (
             <fragment>
               <p>{text}</p>
