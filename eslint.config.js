@@ -35,7 +35,8 @@ export default [
     // module style (IIFE namespaces, manual loop counters, `_`-prefixed handles to
     // the wrapped originals) is intentional and behaviour-preserving, so relax the
     // shared config's stylistic rules that conflict with it rather than rewriting
-    // logic. The `any`-typed compose/sequence chains are documented in-source.
+    // logic. The two justified `any`s (the heterogeneous compose/sequence chains)
+    // carry site-local disables instead, so new undocumented `any` still gets caught.
     files: ['src/**/*.ts', '__tests__/**/*.{ts,tsx}'],
     rules: {
       'no-plusplus': 'off',
@@ -44,11 +45,16 @@ export default [
       'func-names': 'off',
       'prefer-arrow-callback': 'off',
       '@typescript-eslint/no-shadow': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/naming-convention': 'off',
       '@typescript-eslint/consistent-type-definitions': 'off',
-      '@typescript-eslint/no-namespace': 'off',
+      // The port keeps `_`-prefixed handles to the wrapped originals; permit a
+      // leading underscore but otherwise keep the shared format enforcement.
+      '@typescript-eslint/naming-convention': [
+        'error',
+        { selector: 'variable', format: ['camelCase', 'PascalCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
+        { selector: 'function', format: ['camelCase', 'PascalCase'] },
+        { selector: 'typeLike', format: ['PascalCase'] },
+      ],
     },
   },
   {

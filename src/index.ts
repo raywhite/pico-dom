@@ -392,6 +392,7 @@ export const reduce = (function () {
  * so the chain is typed as `any` - the structural contract is left to
  * the caller, matching the original untyped behaviour.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function compose(...fns: Array<(x: any) => any>): (res: any) => any {
   return function (res) {
     let len = fns.length;
@@ -410,6 +411,7 @@ export function compose(...fns: Array<(x: any) => any>): (res: any) => any {
  *
  * See `compose` for the rationale behind the `any`-typed chain.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function sequence(...fns: Array<(x: any) => any>): (res: any) => any {
   return function (res) {
     const len = fns.length;

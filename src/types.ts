@@ -68,24 +68,6 @@ export type ParentNode = ElementNode | RootNode;
 export type Props = Record<string, unknown> & { children?: unknown[] };
 
 /**
- * Global JSX typings for the classic runtime (`jsxFactory: adapter.createNode`).
- * The element type produced IS this module's `Node`, which is exactly what
- * @raywhite/markup consumes. Intrinsic elements accept arbitrary props since
- * `createNode` coerces any attribute to a string.
- */
-declare global {
-  namespace JSX {
-    type Element = Node;
-    interface ElementChildrenAttribute {
-      children: object;
-    }
-    interface IntrinsicElements {
-      [tagName: string]: Record<string, unknown>;
-    }
-  }
-}
-
-/**
  * The methods the source actually uses on the htmlparser2 adapter, plus
  * the custom methods the source adds (`isRootNode`, `createTextNode`, and
  * the `appendChild`/`insertBefore`/`cloneNode`/`createNode` overrides).
