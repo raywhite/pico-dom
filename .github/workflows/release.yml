@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Never cancel an in-flight release: aborting between `npm publish` and
+  # the GitHub release/tag push leaves the registry and repo out of sync.
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  release:
+    name: Release
+    permissions:
+      actions: write # allows triggering actions in opened PRs
+      contents: write # to create release (changesets/action)
+      id-token: write # required for provenance and oidc publish
+      pull-requests: write # to create pull request (changesets/action)
+    uses: raywhite/github-workflows/.github/workflows/push_changeset_release_publish.yml@111c6eaa4f9484aa66d6de6023cc43e1f1f82770 # v3.1.2
+    with:
+      environment: release
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

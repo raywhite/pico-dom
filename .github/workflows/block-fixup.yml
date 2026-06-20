@@ -1,0 +1,12 @@
+name: Git Check
+
+on: [pull_request]
+
+permissions: {}
+
+jobs:
+  git-check:
+    permissions:
+      contents: read # checkout
+      pull-requests: read # inspect PR commit list for fixup commits
+    uses: raywhite/github-workflows/.github/workflows/pull_request_git_block_fixup.yml@111c6eaa4f9484aa66d6de6023cc43e1f1f82770 # v3.1.2
