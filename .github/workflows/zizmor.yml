@@ -32,7 +32,11 @@ jobs:
           version: '2026.5.12'
           install_args: 'aqua:zizmorcore/zizmor'
 
+      # CI loads zizmor.ci.yml, which disables only impostor-commit: the
+      # default GITHUB_TOKEN can't list tags on the private reusable workflow
+      # repo referenced by release.yml. Local `mise run lint-actions` uses the
+      # auto-discovered zizmor.yml, where that audit stays enabled.
       - name: Run zizmor
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mise exec -- zizmor --format=github --min-severity=medium .
+        run: mise exec -- zizmor --format=github --min-severity=medium --config zizmor.ci.yml .

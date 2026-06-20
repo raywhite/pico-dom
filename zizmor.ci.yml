@@ -1,0 +1,24 @@
+# CI-only zizmor config. Loaded via `--config zizmor.ci.yml` from the zizmor
+# workflow. zizmor loads a SINGLE config (it does not merge with the
+# auto-discovered `zizmor.yml`), so this duplicates the base rules and adds
+# ONE difference: impostor-commit is disabled.
+#
+# Rationale: release.yml references the org's private
+# `raywhite/github-workflows`, and CI's default GITHUB_TOKEN can't list its
+# tags, so impostor-commit fatally errors. Locally it stays enabled (see
+# `zizmor.yml`) where a developer's `gh` token can reach the private repo.
+# Keep the two files in sync apart from the `impostor-commit` block.
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        '*': hash-pin
+  # arc-runner-set is our internal ARC fleet — accepted operational choice
+  # for cost reasons. Per-file ignore so any new workflow using a
+  # self-hosted runner shows up as a finding until reviewed.
+  self-hosted-runner:
+    ignore:
+      - test.yml
+      - zizmor.yml
+  impostor-commit:
+    disable: true
