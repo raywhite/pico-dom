@@ -92,9 +92,9 @@ export type PicoAdapter = {
   insertText(parentNode: Node, text: string): void;
   insertTextBefore(parentNode: Node, text: string, referenceNode: Node): void;
   adoptAttributes(recipient: Node, attrs: Attribute[]): void;
-  isCommentNode(node: Node): boolean;
-  isElementNode(node: Node): boolean;
-  isTextNode(node: Node): boolean;
+  isCommentNode(node: Node): node is CommentNode;
+  isElementNode(node: Node): node is ElementNode;
+  isTextNode(node: Node): node is TextNode;
   isDocumentTypeNode(node: Node): boolean;
 
   // Overridden by the source (signatures preserved).
@@ -103,7 +103,7 @@ export type PicoAdapter = {
   cloneNode(node: Node): Node;
 
   // Added by the source.
-  isRootNode(node: Node): boolean;
+  isRootNode(node: Node): node is RootNode;
   createTextNode(text: string): TextNode;
   createNode(
     tagName: string | ((props: Props) => Node),
