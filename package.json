@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/raywhite/pico-dom"
+    "url": "git+https://github.com/raywhite/pico-dom.git"
   },
   "scripts": {
     "prebuild": "rm -rf lib",
