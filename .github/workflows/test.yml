@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   test:
     name: ${{ matrix.task.name }}
-    runs-on: arc-runner-set
+    runs-on: ubuntu-latest
     permissions:
       contents: read # checkout, npm cache
 
