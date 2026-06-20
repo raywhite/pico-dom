@@ -1,0 +1,12 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        '*': hash-pin
+  # arc-runner-set is our internal ARC fleet — accepted operational choice
+  # for cost reasons. Per-file ignore so any new workflow using a
+  # self-hosted runner shows up as a finding until reviewed.
+  self-hosted-runner:
+    ignore:
+      - test.yml
+      - zizmor.yml

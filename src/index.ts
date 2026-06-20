@@ -1,5 +1,7 @@
 import { parseFragment, parse as _parse, serialize, treeAdapters } from 'parse5';
 
+import type { Attribute, Node, PicoAdapter, Props } from './types';
+
 /**
  * This entire module interacts (parses from, transforms,
  * serializes to) the `treeAdapter.htmlparser2 ` AST format
@@ -8,53 +10,57 @@ import { parseFragment, parse as _parse, serialize, treeAdapters } from 'parse5'
  *
  * SEE: `https://github.com/inikulin/parse5` - for parse5.
  * SEE: `https://github.com/fb55/htmlparser2` - for the reference implementation.
+ *
+ * parse5's `treeAdapters.htmlparser2` returns are opaque to TypeScript (see
+ * `./types`), so we cast the adapter once here to our local `PicoAdapter`.
  */
-const adapter = treeAdapters.htmlparser2;
-const OPTIONS = { treeAdapter: adapter };
+const adapter = treeAdapters.htmlparser2 as unknown as PicoAdapter;
+// parse5's `ParserOptions`/`SerializerOptions` expect its own (mistyped)
+// `treeAdapter`; cast once at this boundary - see `./types` for why.
+const OPTIONS = { treeAdapter: adapter } as never;
 
 /**
- * @param {String} some markup
+ * @param doc - markup string, or a boolean selecting document vs fragment
+ * @param markup - markup string when `doc` is a boolean
  *
  * TODO: Needs tests for support of parsing as a document.
  *
- * @returns {Object} document model
+ * @returns document model
  */
-export function parse(doc = false, markup = '') { // eslint-disable-line consistent-return
+export function parse(doc: boolean | string = false, markup = ''): Node {
   // A markup string was passed as the only argument - default.
   if (typeof doc === 'string') {
-    return parseFragment(doc, OPTIONS);
+    return parseFragment(doc, OPTIONS) as unknown as Node;
   }
 
   // A doc options was passed.
   if (typeof doc === 'boolean' && typeof markup === 'string') {
     // Parse as a document.
-    if (doc) return _parse(markup, OPTIONS);
+    if (doc) return _parse(markup, OPTIONS) as unknown as Node;
 
     // Parse as a document fragment.
-    return parseFragment(markup, OPTIONS);
+    return parseFragment(markup, OPTIONS) as unknown as Node;
   }
 
   return doc ? adapter.createDocument() : adapter.createDocumentFragment();
 }
 
 /**
- * @param {String} a document model
+ * @param model - a document model
  *
- * @returns {Object} some markup
+ * @returns some markup
  */
-export function stringify(model) {
-  return serialize(model, OPTIONS);
+export function stringify(model: Node): string {
+  return serialize(model as never, OPTIONS);
 }
 
 /**
  * A check to determine if a node is the document, or document
  * fragment root.
  *
- * @param {Object} a node
- *
- * @returns
+ * @param node - a node
  */
-adapter.isRootNode = function (node) {
+adapter.isRootNode = function (node: Node): boolean {
   return node.type === 'root';
 };
 
@@ -72,21 +78,22 @@ adapter.createTextNode = (function () {
    * this API is required for proper functioning of
    * the walker.
    *
-   * @param {String} the text content
+   * @param text - the text content
    *
-   * @returns {Object} the text node
+   * @returns the text node
    */
-  return function (text) {
+  return function (text: string) {
     adapter.insertText(p, text);
-    const textNode = adapter.getChildNodes(p).pop();
+    // `getChildNodes` always returns at least the just-inserted node here.
+    const textNode = adapter.getChildNodes(p).pop()!;
     adapter.detachNode(textNode);
-    return textNode;
+    return textNode as ReturnType<PicoAdapter['createTextNode']>;
   };
 }());
 
 // TODO: Document.
 const _appendChild = adapter.appendChild;
-adapter.appendChild = function (parentNode, node) {
+adapter.appendChild = function (parentNode: Node, node: Node) {
   if (!adapter.isTextNode(node)) {
     return _appendChild(parentNode, node);
   }
@@ -97,7 +104,7 @@ adapter.appendChild = function (parentNode, node) {
 
 // TODO: Document.
 const _insertBefore = adapter.insertBefore;
-adapter.insertBefore = function (parentNode, node, referenceNode) {
+adapter.insertBefore = function (parentNode: Node, node: Node, referenceNode: Node) {
   if (!adapter.isTextNode(node)) {
     return _insertBefore(parentNode, node, referenceNode);
   }
@@ -107,7 +114,7 @@ adapter.insertBefore = function (parentNode, node, referenceNode) {
 };
 
 // TODO: Document.
-adapter.cloneNode = function (node) {
+adapter.cloneNode = function (node: Node): Node {
   if (adapter.isCommentNode(node)) {
     const content = adapter.getCommentNodeContent(node);
     return adapter.createCommentNode(content);
@@ -149,12 +156,10 @@ adapter.createNode = (function () {
    *
    * TODO: This really feels like it should be type checked.
    *
-   * @param {Object} the parent node
-   * @param {Array} the child nodes
-   *
-   * @returns {Void}
+   * @param parentNode - the parent node
+   * @param childNodes - the child nodes
    */
-  function append(parentNode, childNodes) {
+  function append(parentNode: Node, childNodes: unknown[]): void {
     /* eslint-disable no-continue */
     const len = childNodes.length;
     for (let i = 0; i < len; i++) {
@@ -178,18 +183,22 @@ adapter.createNode = (function () {
       /* eslint-enable no-continue */
 
       // Must be a regular node, just append it.
-      adapter.appendChild(parentNode, node);
+      adapter.appendChild(parentNode, node as Node);
     }
   }
 
   /**
-   * @param {String|Function} tag name or component function
-   * @param {Object} attributes
-   * @param {...Mixed} the child nodes
+   * @param tagName - tag name or component function
+   * @param attributes - attributes
+   * @param childNodes - the child nodes
    *
-   * @returns {Object} the new node
+   * @returns the new node
    */
-  return function (tagName, attributes, ...childNodes) {
+  return function (
+    tagName: string | ((props: Props) => Node),
+    attributes: Record<string, unknown> | null,
+    ...childNodes: unknown[]
+  ): Node {
     if (typeof tagName === 'function') {
       /**
        * Add `children` to the attributes them to the attributes and
@@ -197,13 +206,13 @@ adapter.createNode = (function () {
        * recurse.
        */
       const fn = tagName;
-      const props = Object.assign({}, attributes);
+      const props: Props = { ...attributes};
       props.children = childNodes;
       return fn(props);
     }
 
-    let node = null;
-    const _attributes = [];
+    let node: Node;
+    const _attributes: Attribute[] = [];
 
     // Coerce the attributes into the correct structure.
     if (attributes !== null) {
@@ -211,7 +220,7 @@ adapter.createNode = (function () {
       const len = keys.length;
 
       for (let i = 0; i < len; i++) {
-        const name = keys[i];
+        const name = keys[i]!;
         const value = attributes[name];
 
         /**
@@ -251,23 +260,38 @@ adapter.createNode = (function () {
 // Export the adapter.
 export { adapter };
 
+/**
+ * Public node types. `Node` is the JSX-element contract downstream consumers
+ * (e.g. @raywhite/markup, whose JSX compiles to `adapter.createNode`) bind to;
+ * `Props` is the component prop shape. Type-only so they stay erasable and
+ * don't affect the value output. `PicoAdapter` stays internal — it's an
+ * implementation detail of the parse5 cast, not a consumer contract.
+ */
+export type {
+  Attribute,
+  CommentNode,
+  ElementNode,
+  Node,
+  Props,
+  RootNode,
+  TextNode,
+} from './types';
+
 export const map = (function () {
   /**
    * Prepend the provided nodes to the array of child nodes
    * for the `parentNode`.
    *
-   * @param {Object} the parent node
-   * @param {Object|Array} the new child node(s)
-   *
-   * @returns {Void}
+   * @param parentNode - the parent node
+   * @param newNode - the new child node(s)
    */
-  function prepend(parentNode, newNode) {
+  function prepend(parentNode: Node, newNode: Node | Node[] | null): void {
     const children = adapter.getChildNodes(parentNode);
     if (!Array.isArray(newNode)) {
       if (newNode === null) return;
 
-      children.length ? // eslint-disable-line no-unused-expressions
-        adapter.insertBefore(parentNode, newNode, children[0]) : // eslint-disable-line indent
+      children.length ?  
+        adapter.insertBefore(parentNode, newNode, children[0]!) :  
         adapter.appendChild(parentNode, newNode);
 
       return;
@@ -275,7 +299,7 @@ export const map = (function () {
 
     let len = newNode.length;
     while (len) {
-      const _newNode = newNode[len - 1];
+      const _newNode = newNode[len - 1]!;
 
       // The node is null.
       if (_newNode === null) {
@@ -290,8 +314,8 @@ export const map = (function () {
         continue; // eslint-disable-line no-continue
       }
 
-      children.length ? // eslint-disable-line no-unused-expressions
-        adapter.insertBefore(parentNode, _newNode, children[0]) : // eslint-disable-line indent
+      children.length ?  
+        adapter.insertBefore(parentNode, _newNode, children[0]!) :  
         adapter.appendChild(parentNode, _newNode);
 
       len--;
@@ -304,12 +328,12 @@ export const map = (function () {
    * of the callback replaces that node, or where it is `null`,
    * that node is deleted.
    *
-   * @param {Function} the callback function
-   * @param {Object} the node or dom to be mapped
+   * @param fn - the callback function
+   * @param node - the node or dom to be mapped
    *
-   * @returns {Object} the transformed node or an array of nodes
+   * @returns the transformed node or an array of nodes
    */
-  return function (fn, node) {
+  return function map(fn: (node: Node) => Node, node: Node): Node {
     // Clone the original node to produce a detached copy.
     const ret = adapter.cloneNode(node);
 
@@ -318,7 +342,7 @@ export const map = (function () {
       const children = adapter.getChildNodes(node);
       let len = children.length;
       while (len) {
-        const mapped = map(fn, children[len - 1]);
+        const mapped = map(fn, children[len - 1]!);
         prepend(ret, mapped);
         len--;
       }
@@ -336,19 +360,19 @@ export const reduce = (function () {
    * first passed the initial value, and then the return value
    * of any subsequent call.
    *
-   * @param {Function} the accumulator function
-   * @param {Mixed} the initial value
-   * @param {Object} a node
+   * @param fn - the accumulator function
+   * @param i - the initial value
+   * @param node - a node
    *
-   * @returns {Object} the accumulated value
+   * @returns the accumulated value
    * @private
    */
-  function recurse(fn, i, node) {
+  function recurse<T>(fn: (acc: T, node: Node) => T, i: T, node: Node): T {
     if (adapter.isElementNode(node) || adapter.isRootNode(node)) {
       const children = adapter.getChildNodes(node);
       let len = children.length;
       while (len) {
-        const childNode = children[len - 1];
+        const childNode = children[len - 1]!;
         i = recurse(fn, i, childNode);
         len--;
       }
@@ -359,19 +383,21 @@ export const reduce = (function () {
   /**
    * A small wrapper around the private `recurse`.
    *
-   * @param {Function} the accumulator function
-   * @param {Mixed} the initial value
-   * @param {Object} a node
+   * @param fn - the accumulator function
+   * @param i - the initial value, or a factory producing it
+   * @param node - a node
    *
-   * @returns {Object} the transformed node
+   * @returns the transformed node
    */
-  return function (fn, i, node) {
-    if (typeof i === 'function') i = i();
+  return function <T>(fn: (acc: T, node: Node) => T, i: T | (() => T), node: Node): T {
+    let initial: T;
+    if (typeof i === 'function') initial = (i as () => T)();
+    else initial = i;
     /**
      * If we are dealing with a node that potentially has children,
      * then we need to reduce their children right to left first.
      */
-    return recurse(fn, i, node);
+    return recurse(fn, initial, node);
   };
 }());
 
@@ -379,15 +405,16 @@ export const reduce = (function () {
  * Compose a set of functions from right to left, the first argument
  * will be the last function to be called in the composed function.
  *
- * @param {...Function}
- *
- * @returns {Function}
+ * Functions are heterogeneous (each may take/return a different type),
+ * so the chain is typed as `any` - the structural contract is left to
+ * the caller, matching the original untyped behaviour.
  */
-export function compose(...fns) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function compose(...fns: Array<(x: any) => any>): (res: any) => any {
   return function (res) {
     let len = fns.length;
     while (len) {
-      res = fns[len - 1](res); // eslint-disable-line no-param-reassign
+      res = fns[len - 1]!(res);
       len--;
     }
     return res;
@@ -399,15 +426,14 @@ export function compose(...fns) {
  * will be the first function to be called in the composed function.
  * Effectively the opposite of `compose`.
  *
- * @param {...Function}
- *
- * @returns {Function}
+ * See `compose` for the rationale behind the `any`-typed chain.
  */
-export function sequence(...fns) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function sequence(...fns: Array<(x: any) => any>): (res: any) => any {
   return function (res) {
     const len = fns.length;
     for (let i = 0; i < len; i++) {
-      res = fns[i](res); // eslint-disable-line no-param-reassign
+      res = fns[i]!(res);
     }
     return res;
   };

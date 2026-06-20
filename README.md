@@ -1,8 +1,8 @@
 # pico-dom
 
-[![CircleCI](https://circleci.com/gh/raywhite/pico-dom.svg?style=shield&circle-token=971d877b223828f6c0bd193cc0e0ff602f721ef7)](https://circleci.com/gh/raywhite/pico-dom)
-
 > Create, transform and serialize lightweight HTML abstract syntax trees in a functional and composable style. You know... for the web!
+
+This package is written in TypeScript and ships generated type declarations. It builds to dual CJS/ESM via [tsup](https://tsup.egoist.dev/); consumers get the right module format and types automatically through the package `exports` map.
 
 ## About
 
@@ -74,7 +74,7 @@ Creates a document fragment that new nodes can be insterted into / appended to.
 - **attrs** (`object`) - the attribute (`key`:`value`) pairs or `props`.
 - **childNodes** (`...object|array|string`) - the child nodes of this node.
 
-This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. In order to use this function with JSX, you need to be using transpilation and specify the custom **pragma** (compiler directive) `adapter.createNode`. See the [babel](https://babeljs.io/) documentation for setting this up [here]([babel](https://babeljs.io/docs/plugins/transform-react-jsx/)).
+This is a higher level, [JSX](https://facebook.github.io/jsx/) compatible function that should be used for the creation of elements or reusable functional components. It is effectively a templating helper function. To use it with JSX you need transpilation configured with the classic runtime and the factory (pragma) set to `adapter.createNode` — e.g. in `tsconfig.json` set `"jsx": "react"` and `"jsxFactory": "adapter.createNode"`.
 
 **Note:** this function supports the use of two extra `tagName`s; Passing `'fragment'` as will create a document fragment root node and passing `'document'` will create a document root node - this means that you won't have to manually append nodes to a document or fragment node in order to produce a serializable abstract syntax tree.
 
@@ -218,6 +218,13 @@ The order in which arguments are passed to `reduce` is designed to allow for par
 ### **sequence(...*fns*)**
 
 - **fns** (`...function`) - the functions to be sequenced.
+
+## Development
+
+```sh
+npm test       # lint (eslint), type check (tsc) and run the test suite (vitest)
+npm run build  # bundle to lib/ (tsup) — dual CJS/ESM plus .d.ts/.d.cts
+```
 
 ### License
 
