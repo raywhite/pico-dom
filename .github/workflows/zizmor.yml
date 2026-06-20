@@ -37,12 +37,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # `--format=github` emits annotations on PRs (limit 10 per step).
         # `--min-severity=medium` gates on med+ findings; info/low advisory.
-        # `--no-online-audits` skips audits that require GitHub API access
-        # (impostor-commit, ref-version-mismatch, known-vulnerable-actions).
-        # We do this because git.yml references raywhite/github-workflows,
-        # a sibling private repo our runner's GITHUB_TOKEN can't read tags
-        # for, which causes the impostor-commit audit to hard-fail (not
-        # just produce a suppressible finding). Local devs still run the
-        # online audits via `mise run lint-actions` (gh auth token has org
-        # access). Tracked in raywhite/github-workflows#21.
-        run: mise exec -- zizmor --format=github --min-severity=medium --no-online-audits .
+        run: mise exec -- zizmor --format=github --min-severity=medium .
