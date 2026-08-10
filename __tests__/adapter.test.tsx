@@ -29,6 +29,7 @@ describe('adapter', () => {
       'getDocumentTypeNodeSystemId',
       'getFirstChild',
       'getNamespaceURI',
+      'getNodeSourceCodeLocation',
       'getParentNode',
       'getTagName',
       'getTemplateContent',
@@ -41,7 +42,9 @@ describe('adapter', () => {
       'isTextNode',
       'setDocumentMode',
       'setDocumentType',
+      'setNodeSourceCodeLocation',
       'setTemplateContent',
+      'updateNodeSourceCodeLocation',
     ];
 
     // Plus the monkey patched methods.

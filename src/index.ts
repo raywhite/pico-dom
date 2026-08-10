@@ -1,22 +1,20 @@
-import { parseFragment, parse as _parse, serialize, treeAdapters } from 'parse5';
+import { parseFragment, parse as _parse, serialize } from 'parse5';
+import { adapter as htmlparser2Adapter } from 'parse5-htmlparser2-tree-adapter';
 
 import type { Attribute, Node, PicoAdapter, Props, RootNode } from './types';
 
 /**
- * This entire module interacts (parses from, transforms,
- * serializes to) the `treeAdapter.htmlparser2 ` AST format
- * exposed by parse5. The wrapped `parse` and `stringify`
- * methods require it as an option.
+ * This entire module interacts (parses from, transforms, serializes to) the
+ * htmlparser2 AST format, via the standalone `parse5-htmlparser2-tree-adapter`
+ * passed to parse5's `parse`/`serialize` as the `treeAdapter` option.
  *
  * SEE: `https://github.com/inikulin/parse5` - for parse5.
  * SEE: `https://github.com/fb55/htmlparser2` - for the reference implementation.
  *
- * parse5's `treeAdapters.htmlparser2` returns are opaque to TypeScript (see
- * `./types`), so we cast the adapter once here to our local `PicoAdapter`.
+ * The adapter's returns are opaque to TypeScript (see `./types`), so we cast
+ * it once here to our local `PicoAdapter`.
  */
-const adapter = treeAdapters.htmlparser2 as unknown as PicoAdapter;
-// parse5's `ParserOptions`/`SerializerOptions` expect its own (mistyped)
-// `treeAdapter`; cast once at this boundary - see `./types` for why.
+const adapter = htmlparser2Adapter as unknown as PicoAdapter;
 const OPTIONS = { treeAdapter: adapter } as never;
 
 /**
@@ -64,53 +62,37 @@ adapter.isRootNode = function (node: Node): node is RootNode {
   return node.type === 'root';
 };
 
-/**
- * I'm not entirely certain of what the logic for this is
- * and may need to create an issue with parse5, but `createTextNode` -
- * `https://github.com/inikulin/parse5/blob/master/lib/tree_adapters/htmlparser2.js#L126`
- * is not exposed. So we need to create our own.
- */
-adapter.createTextNode = (function () {
-  const p = adapter.createDocumentFragment();
-
-  /**
-   * Create a detached text node in a roundabout way,
-   * this API is required for proper functioning of
-   * the walker.
-   *
-   * @param text - the text content
-   *
-   * @returns the text node
-   */
-  return function (text: string) {
-    adapter.insertText(p, text);
-    // `getChildNodes` always returns at least the just-inserted node here.
-    const textNode = adapter.getChildNodes(p).pop()!;
-    adapter.detachNode(textNode);
-    return textNode as ReturnType<PicoAdapter['createTextNode']>;
-  };
-}());
-
-// TODO: Document.
+// Native `appendChild`/`insertBefore`, captured before override. The overrides
+// coalesce text nodes inline; the adapter's own `insertText` routes back
+// through `adapter.appendChild`, so delegating to it would recurse.
 const _appendChild = adapter.appendChild;
+const _insertBefore = adapter.insertBefore;
+
+// A text node coalesces into an adjacent text sibling; other nodes link natively.
 adapter.appendChild = function (parentNode: Node, node: Node) {
   if (!adapter.isTextNode(node)) {
-    return _appendChild(parentNode, node);
+    _appendChild(parentNode, node);
+    return;
   }
 
   const text = adapter.getTextNodeContent(node);
-  return adapter.insertText(parentNode, text);
+  const children = adapter.getChildNodes(parentNode);
+  const last = children[children.length - 1];
+  if (last && adapter.isTextNode(last)) last.data += text;
+  else _appendChild(parentNode, adapter.createTextNode(text));
 };
 
-// TODO: Document.
-const _insertBefore = adapter.insertBefore;
 adapter.insertBefore = function (parentNode: Node, node: Node, referenceNode: Node) {
   if (!adapter.isTextNode(node)) {
-    return _insertBefore(parentNode, node, referenceNode);
+    _insertBefore(parentNode, node, referenceNode);
+    return;
   }
 
   const text = adapter.getTextNodeContent(node);
-  return adapter.insertTextBefore(parentNode, text, referenceNode);
+  const children = adapter.getChildNodes(parentNode);
+  const prev = children[children.indexOf(referenceNode) - 1];
+  if (prev && adapter.isTextNode(prev)) prev.data += text;
+  else _insertBefore(parentNode, adapter.createTextNode(text), referenceNode);
 };
 
 // TODO: Document.
