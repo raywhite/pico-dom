@@ -43,7 +43,8 @@
   },
   "prettier": "@raywhite/prettier-config",
   "dependencies": {
-    "parse5": "^3.0.2"
+    "parse5": "^8.0.1",
+    "parse5-htmlparser2-tree-adapter": "^8.0.1"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",

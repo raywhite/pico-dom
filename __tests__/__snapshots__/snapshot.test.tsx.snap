@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parse5 behavioural snapshots > escapes ampersands in attribute values 1`] = `"<img src="x.com/?a=b&amp;c=d">"`;
+
+exports[`parse5 behavioural snapshots > map identity preserves serialized structure 1`] = `"<div class="a" data-x="1"><a href="http://x.haus?a=b&amp;c=d">anchor</a><p>text<br>more</p><!--a comment--><ul><li>one</li><li>two</li></ul></div>"`;
+
+exports[`parse5 behavioural snapshots > reduce collects tag names in traversal order 1`] = `
+[
+  "li",
+  "li",
+  "ul",
+  "br",
+  "p",
+  "a",
+  "div",
+]
+`;
+
+exports[`parse5 behavioural snapshots > round-trips fragment markup 1`] = `"<div class="a" data-x="1"><a href="http://x.haus?a=b&amp;c=d">anchor</a><p>text<br>more</p><!--a comment--><ul><li>one</li><li>two</li></ul></div>"`;
+
+exports[`parse5 behavioural snapshots > round-trips full-document markup 1`] = `"<html><head></head><body><p>hi</p></body></html>"`;
+
+exports[`parse5 behavioural snapshots > serializes a tree built via createNode (JSX) 1`] = `"leading text<a href="/x">link</a>ab<p>nested</p>"`;
